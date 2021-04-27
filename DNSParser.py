@@ -1,6 +1,7 @@
 from struct import *
 from DNSLogger import *
 
+
 def unpackInfo(info):
     QR = (info & 32768) >> 15
     opCode = (info & 30720) >> 11
@@ -25,7 +26,7 @@ def getDomainName(request, offset):
         label = domainStruct.unpack_from(request, offset)[0].decode()
         domainName += label + '.'
         offset += domainStruct.size
-    return domainName[:-1], offset
+    return domainName, offset
 
 
 def unpackQuestions(request, qdCount, offset):
@@ -43,11 +44,13 @@ def unpackQuestions(request, qdCount, offset):
         questions.append(question)
     return questions, offset
 
+
 def parseRequest(request):
     offset = 0
     headerStruct = Struct('!HHHHHH')
     id, info, qdCount, anCount, nsCount, arCount = headerStruct.unpack_from(request, offset)
     offset += headerStruct.size
     questions, newOffset = unpackQuestions(request, qdCount, offset)
+    QR, opCode, AA, TC, RD, RA, Z, rCode = unpackInfo(info)
     offset = newOffset
-    return id, info, qdCount, anCount, nsCount, arCount, questions
+    return id, questions
