@@ -59,3 +59,11 @@ def logQuestions(questions):
 
 def myPrint(data):
     __writeLog('logs/logX.log', 'a', str(data) + '\n')
+
+
+def printAnswer(response):
+    offset = 0
+    id, info, qdCount, anCount, nsCount, arCount, offset = DNSParser.unpackHeaders(response, offset)
+    questions, offset = DNSParser.unpackQuestions(response, qdCount, offset)
+    authorityInfo, offset = DNSParser.unpackRR(response, anCount, offset)
+    myPrint(authorityInfo)
