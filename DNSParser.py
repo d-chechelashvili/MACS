@@ -3,6 +3,35 @@ from struct import *
 from DNSResponder import typeConstants
 
 
+def unpackRR(message, count, offset):
+    resourceRecords = []
+    RRStruct = Struct('!HHiH')
+    while count > 0:
+        domainName, offset = getDomainName(message, offset)
+        answerType, answerClass, ttl, rdLength = RRStruct.unpack_from(message, offset)
+        offset += RRStruct.size
+        type = typeConstants.get(answerType, 'NOT_SUPPORTED')
+        if type == 'A':
+            AStruct = Struct('!BBBB')
+            RDATA = AStruct.unpack_from(message, offset)
+            ipv4 = str(RDATA[0]) + '.' + str(RDATA[1]) + '.' + str(RDATA[2]) + '.' + str(RDATA[3])
+            offset += AStruct.size
+            resourceRecords.append((domainName, answerType, answerClass, ttl, rdLength, ipv4))
+        elif type == 'NS':
+            RDATA, offset = getDomainName(message, offset)
+            resourceRecords.append((domainName, answerType, answerClass, ttl, rdLength, RDATA))
+        elif type == 'AAAA':
+            import ipaddress
+            ipv6 = ipaddress.IPv6Address(message[offset:offset + 16])
+            s = Struct('!8H')
+            offset += s.size
+            resourceRecords.append((domainName, answerType, answerClass, ttl, rdLength, ipv6))
+        else:
+            offset += rdLength
+        count -= 1
+    return resourceRecords, offset
+
+
 def unpackInfo(info):
     QR = (info & 32768) >> 15
     opCode = (info & 30720) >> 11
@@ -68,34 +97,5 @@ def parseRequest(request):
     offset = 0
     id, info, qdCount, anCount, nsCount, arCount, offset = unpackHeaders(request, offset)
     questions, offset = unpackQuestions(request, qdCount, offset)
-    QR, opCode, AA, TC, RD, RA, Z, rCode = unpackInfo(info)
+    #QR, opCode, AA, TC, RD, RA, Z, rCode = unpackInfo(info)
     return id, questions
-
-
-def unpackRR(message, count, offset):
-    resourceRecords = []
-    RRStruct = Struct('!HHiH')
-    while count > 0:
-        domainName, offset = getDomainName(message, offset)
-        answerType, answerClass, ttl, rdLength = RRStruct.unpack_from(message, offset)
-        offset += RRStruct.size
-        type = typeConstants.get(answerType, 'NOT_SUPPORTED')
-        if type == 'A':
-            AStruct = Struct('!BBBB')
-            RDATA = AStruct.unpack_from(message, offset)
-            ipv4 = str(RDATA[0]) + '.' + str(RDATA[1]) + '.' + str(RDATA[2]) + '.' + str(RDATA[3])
-            offset += AStruct.size
-            resourceRecords.append((domainName, answerType, answerClass, ttl, rdLength, ipv4))
-        elif type == 'NS':
-            RDATA, offset = getDomainName(message, offset)
-            resourceRecords.append((domainName, answerType, answerClass, ttl, rdLength, RDATA))
-        elif type == 'AAAA':
-            import ipaddress
-            ipv6 = ipaddress.IPv6Address(message[offset:offset + 16])
-            s = Struct('!8H')
-            offset += s.size
-            resourceRecords.append((domainName, answerType, answerClass, ttl, rdLength, ipv6))
-        else:
-            offset += rdLength
-        count -= 1
-    return resourceRecords, offset

@@ -24,54 +24,40 @@ DNSPORT = 53
 cache = {}
 
 
-def getLocalAnswers(questions, CONFIG):
+def getForeignAnswer(request, server):
+    tempSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    tempSocket.sendto(request, (server, DNSPORT))
+    response, addr = tempSocket.recvfrom(2048)
+    offset = 0
+    id, info, qdCount, anCount, nsCount, arCount, offset = DNSParser.unpackHeaders(response, offset)
+    if anCount: return response, True
+    questions, offset = DNSParser.unpackQuestions(response, qdCount, offset)
+    authorityInfo, offset = DNSParser.unpackRR(response, nsCount, offset)
+    additionalInfo, offset = DNSParser.unpackRR(response, arCount, offset)
+    answer = None
+    answerFound = False
+    information = additionalInfo + authorityInfo
+    for info in information:
+        ip = info[5]
+        answer, answerFound = getForeignAnswer(request, ip)
+        if answerFound: break
+    return answer, answerFound
+
+
+def getForeignAnswers(unansweredQuestions, request):
     answers = []
-    unansweredQuestions = []
-    isAuthoritative = 0
-    ttl = 0
-    zoneFiles = [easyzone.zone_from_file('example.com', CONFIG + 'example.com.conf'),
-                 easyzone.zone_from_file('example2.com', CONFIG + 'example2.com.conf'),
-                 easyzone.zone_from_file('FreeUniCN19.com', CONFIG + 'FreeUniCN19.com.conf')]
-    for question in questions:
-        answerLen = len(answers)
-        qName = question['domainName']
-        for zoneFile in zoneFiles:
-            zoneDomainNames = zoneFile.get_names()
-            if qName in zoneDomainNames:
-                recordType = typeConstants[question['QTYPE']]
-                if zoneDomainNames[qName].soa:
-                    isAuthoritative = 1
-                ttl = zoneDomainNames[qName].ttl
-                answer = [record for record in zoneDomainNames[qName].records(recordType)]
-                answers.append(answer)
+    for question in unansweredQuestions:
+        qDescription = (question['domainName'], question['QTYPE'])
+        if qDescription in cache:
+            answers.append(request[0:2] + cache[qDescription])
+        else:
+            for rootServer in rootServers:
+                answer, answerFound = getForeignAnswer(request, rootServer)
+                if answerFound:
+                    cache[qDescription] = answer[2:]
+                    answers.append(answer)
                 break
-        if answerLen == len(answers):
-            unansweredQuestions.append(question)
-    return answers, isAuthoritative, ttl, unansweredQuestions
-
-
-def encodeName(name, txt=0):
-    encodedName = b''
-    for label in name:
-        if not label: continue
-        labelLen = len(label) + txt
-        structType = '!B' + str((labelLen - txt)) + 's'
-        labelStruct = struct.Struct(structType)
-        labelValues = (labelLen, label.encode())
-        encodedName += labelStruct.pack(*labelValues)
-    encodedName += struct.pack('!B', 0)
-    return encodedName
-
-
-def packHeaders(answers, isAuthoritative, id):
-    headerStruct = struct.Struct('!HHHHHH')
-    opCode = TC = RD = Z = rCode = qdCount = nsCount = arCount = 0
-    QR = RA = 1
-    info = QR * 2 ** 15 + isAuthoritative * 2 ** 10 + RA * 2 ** 7
-    anCount = len(answers)
-    headerValues = (id, info, qdCount, anCount, nsCount, arCount)
-    packedHeader = headerStruct.pack(*headerValues)
-    return packedHeader
+    return answers
 
 
 def encodeSOA(soa):
@@ -108,6 +94,19 @@ def getRDATA(type, answers):
     return RDATA
 
 
+def encodeName(name, txt=0):
+    encodedName = b''
+    for label in name:
+        if not label: continue
+        labelLen = len(label) + txt
+        structType = '!B' + str((labelLen - txt)) + 's'
+        labelStruct = struct.Struct(structType)
+        labelValues = (labelLen, label.encode())
+        encodedName += labelStruct.pack(*labelValues)
+    encodedName += struct.pack('!B', 0)
+    return encodedName
+
+
 def packAnswers(answers, questions, ttl):
     encodedAnswer = b''
     for question in questions:
@@ -124,40 +123,41 @@ def packAnswers(answers, questions, ttl):
     return encodedAnswer
 
 
-def getForeignAnswer(request, server):
-    tempSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    tempSocket.sendto(request, (server, DNSPORT))
-    response, addr = tempSocket.recvfrom(2048)
-    offset = 0
-    id, info, qdCount, anCount, nsCount, arCount, offset = DNSParser.unpackHeaders(response, offset)
-    if anCount: return response, True
-    questions, offset = DNSParser.unpackQuestions(response, qdCount, offset)
-    authorityInfo, offset = DNSParser.unpackRR(response, nsCount, offset)
-    additionalInfo, offset = DNSParser.unpackRR(response, arCount, offset)
-    answer = None
-    answerFound = False
-    information = additionalInfo + authorityInfo
-    for info in information:
-        ip = info[5]
-        answer, answerFound = getForeignAnswer(request, ip)
-        if answerFound: break
-    return answer, answerFound
+def packHeaders(answers, isAuthoritative, id):
+    headerStruct = struct.Struct('!HHHHHH')
+    opCode = TC = RD = Z = rCode = qdCount = nsCount = arCount = 0
+    QR = RA = 1
+    info = QR * 2 ** 15 + isAuthoritative * 2 ** 10 + RA * 2 ** 7
+    anCount = len(answers)
+    headerValues = (id, info, qdCount, anCount, nsCount, arCount)
+    packedHeader = headerStruct.pack(*headerValues)
+    return packedHeader
 
 
-def getForeignAnswers(unansweredQuestions, request):
+def getLocalAnswers(questions, CONFIG):
     answers = []
-    for question in unansweredQuestions:
-        qDescription = (question['domainName'], question['QTYPE'])
-        if qDescription in cache:
-            answers.append(request[0:2] + cache[qDescription])
-        else:
-            for rootServer in rootServers:
-                answer, answerFound = getForeignAnswer(request, rootServer)
-                if answerFound:
-                    cache[qDescription] = answer[2:]
-                    answers.append(answer)
+    unansweredQuestions = []
+    isAuthoritative = 0
+    ttl = 0
+    zoneFiles = [easyzone.zone_from_file('example.com', CONFIG + 'example.com.conf'),
+                 easyzone.zone_from_file('example2.com', CONFIG + 'example2.com.conf'),
+                 easyzone.zone_from_file('FreeUniCN19.com', CONFIG + 'FreeUniCN19.com.conf')]
+    for question in questions:
+        answerLen = len(answers)
+        qName = question['domainName']
+        for zoneFile in zoneFiles:
+            zoneDomainNames = zoneFile.get_names()
+            if qName in zoneDomainNames:
+                recordType = typeConstants[question['QTYPE']]
+                if zoneDomainNames[qName].soa:
+                    isAuthoritative = 1
+                ttl = zoneDomainNames[qName].ttl
+                answer = [record for record in zoneDomainNames[qName].records(recordType)]
+                answers.append(answer)
                 break
-    return answers
+        if answerLen == len(answers):
+            unansweredQuestions.append(question)
+    return answers, isAuthoritative, ttl, unansweredQuestions
 
 
 def assembleResponse(request, CONFIG):
