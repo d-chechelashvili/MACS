@@ -149,12 +149,12 @@ def getForeignAnswers(unansweredQuestions, request):
     for question in unansweredQuestions:
         qDescription = (question['domainName'], question['QTYPE'])
         if qDescription in cache:
-            answers.append(cache[qDescription])
+            answers.append(request[0:2] + cache[qDescription])
         else:
             for rootServer in rootServers:
                 answer, answerFound = getForeignAnswer(request, rootServer)
                 if answerFound:
-                    cache[qDescription] = answer
+                    cache[qDescription] = answer[2:]
                     answers.append(answer)
                 break
     return answers
