@@ -43,7 +43,7 @@ run_test(){
         CUR_SCORE=$(timeout ${TIMEOUT}s dig -t ${FLAG} +noall +answer $DOMAIN @$IP -p $PORT | grep -q "${ANS[${FLAG}]}" ; echo $((1-$?)))
         # Kill Process/dns port
         kill_dns > /dev/null 2>&1
-        
+
         SCORE=$((SCORE + $CUR_SCORE))
         DEBUG_LOG ${CUR_SCORE} ${DOMAIN} ${FLAG}
         FULL_SCORE=$((FULL_SCORE + 1))
@@ -72,19 +72,19 @@ test_configuration(){
 
 test_outside(){
     echo "### Testing Outside of configurations..."
-    # # twitch.tv
-    DOMAIN=twitch.tv
-    declare -A ANS=([A]="151.101.66.167" [MX]="aspmx.l.google.com." [NS]="ns-664.awsdns-19.net." [TXT]="v=spf1 include:_spf.google.com include:amazonses.com" [SOA]="ns-219.awsdns-27.com. awsdns-hostmaster.amazon.com.")
-    run_test
+     # twitch.tv
+#    DOMAIN=twitch.tv
+#    declare -A ANS=([A]="151.101.66.167" [MX]="aspmx.l.google.com." [NS]="ns1.p18.dynect.net." [TXT]="v=spf1 include:_spf.google.com include:amazonses.com" [SOA]="admin.justin.tv.")
+#    run_test
     
-    # stackoverflow.com
-    DOMAIN=stackoverflow.com
-    declare -A ANS=([A]="151.101.193.69" [MX]="aspmx.l.google.com." [NS]="ns-358.awsdns-44.com." [TXT]="MS=ms52592611")
-    run_test
-    
+#     stackoverflow.com
+#    DOMAIN=stackoverflow.com
+#    declare -A ANS=([A]="151.101.193.69" [MX]="aspmx.l.google.com." [NS]="ns-358.awsdns-44.com." [TXT]="MS=ms52592611")
+#    run_test
+
     # freeuni.edu.ge
     DOMAIN=freeuni.edu.ge
-    declare -A ANS=([A]="185.163.200.15" [MX]="ASPMX.L.GOOGLE.COM." [NS]="ns1.proservice.ge." [TXT]="v=spf1 +a +mx +ip4:74.125.43.121" [SOA]="2020112801" )
+    declare -A ANS=([A]="185.163.200.15" [MX]="ASPMX.L.GOOGLE.COM." [NS]="ns1.proservice.ge." [TXT]="v=spf1 +a +mx +ip4:74.125.43.121" [SOA]="root.freeuni.edu.ge." )
     run_test
 }
 
@@ -139,7 +139,7 @@ if [ -f $SERVER ]; then
     test_configuration
     test_outside
     test_cache
-    
+
     # Show Result
     echo "Score : ${SCORE}/${FULL_SCORE}"
     echo "Total score: " $(((SCORE*100 / FULL_SCORE )))%

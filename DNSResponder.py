@@ -27,7 +27,7 @@ cache = {}
 def getForeignAnswer(request, server):
     tempSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     tempSocket.sendto(request, (server, DNSPORT))
-    response, addr = tempSocket.recvfrom(2048)
+    response, addr = tempSocket.recvfrom(4096)
     offset = 0
     id, info, qdCount, anCount, nsCount, arCount, offset = DNSParser.unpackHeaders(response, offset)
     if anCount: return response, True

@@ -21,11 +21,8 @@ def unpackRR(message, count, offset):
             RDATA, offset = getDomainName(message, offset)
             resourceRecords.append((domainName, answerType, answerClass, ttl, rdLength, RDATA))
         elif type == 'AAAA':
-            import ipaddress
-            ipv6 = ipaddress.IPv6Address(message[offset:offset + 16])
             s = Struct('!8H')
             offset += s.size
-            resourceRecords.append((domainName, answerType, answerClass, ttl, rdLength, ipv6))
         else:
             offset += rdLength
         count -= 1
