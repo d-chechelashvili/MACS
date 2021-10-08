@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="CollectionViewCellCell" customModule="Bidirectional_Layout" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="204" height="292"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="204" height="292"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GXe-fh-3c6">
+                        <rect key="frame" x="0.0" y="0.0" width="204" height="292"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YG6-cq-CRJ">
+                                <rect key="frame" x="0.0" y="0.0" width="204" height="197"/>
+                                <color key="backgroundColor" systemColor="systemYellowColor"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bD5-P1-JUz">
+                                <rect key="frame" x="0.0" y="213" width="204" height="79"/>
+                                <color key="backgroundColor" systemColor="systemYellowColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="bD5-P1-JUz" firstAttribute="height" secondItem="GXe-fh-3c6" secondAttribute="height" multiplier="0.27" id="00e-Rx-p43"/>
+                            <constraint firstItem="YG6-cq-CRJ" firstAttribute="top" secondItem="GXe-fh-3c6" secondAttribute="top" id="1p4-T7-FF9"/>
+                            <constraint firstItem="YG6-cq-CRJ" firstAttribute="leading" secondItem="GXe-fh-3c6" secondAttribute="leading" id="8Yh-6A-7YM"/>
+                            <constraint firstAttribute="trailing" secondItem="YG6-cq-CRJ" secondAttribute="trailing" id="AW7-B7-ppm"/>
+                            <constraint firstItem="bD5-P1-JUz" firstAttribute="leading" secondItem="GXe-fh-3c6" secondAttribute="leading" id="Iph-2l-gjL"/>
+                            <constraint firstAttribute="trailing" secondItem="bD5-P1-JUz" secondAttribute="trailing" id="Rta-av-ZP2"/>
+                            <constraint firstAttribute="bottom" secondItem="bD5-P1-JUz" secondAttribute="bottom" id="SNc-zO-9Uo"/>
+                            <constraint firstItem="YG6-cq-CRJ" firstAttribute="height" secondItem="GXe-fh-3c6" secondAttribute="height" multiplier="0.675" id="Zqu-r5-pc3"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="GXe-fh-3c6" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Jat-Wg-DLP"/>
+                <constraint firstItem="GXe-fh-3c6" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="SBF-L4-FM4"/>
+                <constraint firstAttribute="trailing" secondItem="GXe-fh-3c6" secondAttribute="trailing" id="b5L-74-eCw"/>
+                <constraint firstAttribute="bottom" secondItem="GXe-fh-3c6" secondAttribute="bottom" id="tR7-rt-HYZ"/>
+            </constraints>
+            <size key="customSize" width="204" height="298"/>
+            <connections>
+                <outlet property="biggerView" destination="YG6-cq-CRJ" id="RZN-MN-uLr"/>
+                <outlet property="smallerView" destination="bD5-P1-JUz" id="XxE-Nv-UIP"/>
+            </connections>
+            <point key="canvasLocation" x="-84.057971014492765" y="171.42857142857142"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

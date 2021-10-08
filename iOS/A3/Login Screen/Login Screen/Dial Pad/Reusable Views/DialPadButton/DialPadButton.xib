@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina3_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DialPadButton" customModule="Dial_Pad" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="i9q-PQ-SGN"/>
+                <outlet property="dialPadButton" destination="HAt-Wv-I5G" id="jr0-FC-rPY"/>
+                <outlet property="digitLabel" destination="vc5-OJ-1Ka" id="QTq-PP-iJi"/>
+                <outlet property="textLabel" destination="cc6-f1-Fxe" id="hmq-8L-YkS"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="1fR-sJ-6At">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Digit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vc5-OJ-1Ka">
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="202"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cc6-f1-Fxe">
+                            <rect key="frame" x="0.0" y="210" width="300" height="90"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Text">
+                                    <attributes>
+                                        <font key="NSFont" metaFont="system" size="17"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="cc6-f1-Fxe" firstAttribute="width" secondItem="1fR-sJ-6At" secondAttribute="width" id="lt6-1L-Rvu"/>
+                        <constraint firstItem="vc5-OJ-1Ka" firstAttribute="width" secondItem="1fR-sJ-6At" secondAttribute="width" id="xTb-aa-8OM"/>
+                        <constraint firstItem="cc6-f1-Fxe" firstAttribute="height" secondItem="1fR-sJ-6At" secondAttribute="height" multiplier="0.3" id="xv7-nx-NIH"/>
+                    </constraints>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HAt-Wv-I5G">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                    <connections>
+                        <action selector="handleDialPadButtonTap" destination="-1" eventType="touchUpInside" id="LzU-NH-snR"/>
+                    </connections>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemGray5Color"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="HAt-Wv-I5G" secondAttribute="trailing" id="3QA-bD-pMO"/>
+                <constraint firstItem="1fR-sJ-6At" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="68I-ka-HT2"/>
+                <constraint firstItem="HAt-Wv-I5G" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="8gq-6o-eNW"/>
+                <constraint firstItem="HAt-Wv-I5G" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="CJQ-wh-UBN"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="1fR-sJ-6At" secondAttribute="bottom" id="Ghm-XV-Fmb"/>
+                <constraint firstItem="1fR-sJ-6At" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="L5b-CH-g5A"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="HAt-Wv-I5G" secondAttribute="bottom" id="TL8-I5-X1p"/>
+                <constraint firstItem="1fR-sJ-6At" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="UzO-hA-DbH"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="1fR-sJ-6At" secondAttribute="trailing" id="W03-p5-TXK"/>
+                <constraint firstItem="1fR-sJ-6At" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="YPj-ud-prM"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-75" y="141.25"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemGray5Color">
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

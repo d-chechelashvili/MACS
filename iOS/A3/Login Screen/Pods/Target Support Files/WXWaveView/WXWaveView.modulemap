@@ -1,0 +1,6 @@
+framework module WXWaveView {
+  umbrella header "WXWaveView-umbrella.h"
+
+  export *
+  module * { export * }
+}

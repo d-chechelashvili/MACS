@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ForecastHeader" customModule="Weather_App" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="564" height="146"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zSC-e6-0A8">
+                    <rect key="frame" x="0.0" y="0.0" width="564" height="146"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GAV-Y2-ovl">
+                            <rect key="frame" x="0.0" y="0.0" width="28" height="146"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MzN-ej-Htn">
+                            <rect key="frame" x="28" y="0.0" width="46" height="146"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                            <color key="textColor" name="AccentColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" name="bg-gradient-start"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="GAV-Y2-ovl" secondAttribute="bottom" id="7Rn-8Y-J5a"/>
+                        <constraint firstItem="MzN-ej-Htn" firstAttribute="top" secondItem="zSC-e6-0A8" secondAttribute="top" id="7bz-8R-5O8"/>
+                        <constraint firstItem="GAV-Y2-ovl" firstAttribute="width" secondItem="zSC-e6-0A8" secondAttribute="width" multiplier="0.05" id="9xU-iN-lz9"/>
+                        <constraint firstItem="GAV-Y2-ovl" firstAttribute="top" secondItem="zSC-e6-0A8" secondAttribute="top" id="DeW-Ya-NAW"/>
+                        <constraint firstAttribute="bottom" secondItem="MzN-ej-Htn" secondAttribute="bottom" id="Zpu-Kh-7pV"/>
+                        <constraint firstItem="MzN-ej-Htn" firstAttribute="leading" secondItem="GAV-Y2-ovl" secondAttribute="trailing" id="beo-jI-PTR"/>
+                        <constraint firstItem="GAV-Y2-ovl" firstAttribute="leading" secondItem="zSC-e6-0A8" secondAttribute="leading" id="hlq-dv-UX6"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="zSC-e6-0A8" secondAttribute="bottom" id="5gG-Lx-9q3"/>
+                <constraint firstItem="zSC-e6-0A8" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="dkC-Q6-Uo4"/>
+                <constraint firstItem="zSC-e6-0A8" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="f66-5w-ZdX"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="zSC-e6-0A8" secondAttribute="trailing" id="nOb-1N-Tnt"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="titleLabel" destination="MzN-ej-Htn" id="kbX-O8-eFq"/>
+            </connections>
+            <point key="canvasLocation" x="495" y="-496.47887323943661"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="AccentColor">
+            <color red="0.9882352941176471" green="0.91764705882352937" blue="0.16078431372549021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="bg-gradient-start">
+            <color red="0.40000000000000002" green="0.51372549019607838" blue="0.62352941176470589" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>
