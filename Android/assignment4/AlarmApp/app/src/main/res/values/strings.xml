@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Alarm App</string>
+    <string name="switch_to_dark">Switch to dark</string>
+    <string name="switch_to_light">Switch to light</string>
+</resources>

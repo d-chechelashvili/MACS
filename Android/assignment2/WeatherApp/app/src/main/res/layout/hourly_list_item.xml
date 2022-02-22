@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/hourly_item_height"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/dateLabel"
+        android:layout_marginStart="@dimen/low_margin"
+        android:text="@string/defaultText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/smallTextStyle"/>
+
+    <ImageView
+        android:id="@+id/weatherImage"
+        android:layout_marginStart="@dimen/low_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/dateLabel"
+        app:layout_constraintStart_toEndOf="@+id/dateLabel"
+        app:layout_constraintTop_toTopOf="@+id/dateLabel"
+        app:srcCompat="@drawable/ic_launcher_background"
+        style="@style/smallImageStyle"/>
+
+    <TextView
+        android:id="@+id/item_temperature"
+        android:layout_marginStart="@dimen/low_margin"
+        android:text="@string/defaultText"
+        app:layout_constraintBottom_toBottomOf="@+id/weatherImage"
+        app:layout_constraintStart_toEndOf="@+id/weatherImage"
+        app:layout_constraintTop_toTopOf="@+id/weatherImage"
+        style="@style/temperatureBigTextStyle" />
+
+    <TextView
+        android:id="@+id/item_description"
+        android:layout_marginStart="@dimen/low_margin"
+        android:text="@string/defaultText"
+        app:layout_constraintBottom_toBottomOf="@+id/item_temperature"
+        app:layout_constraintStart_toEndOf="@+id/item_temperature"
+        app:layout_constraintTop_toTopOf="@+id/item_temperature"
+        style="@style/smallTextStyle"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

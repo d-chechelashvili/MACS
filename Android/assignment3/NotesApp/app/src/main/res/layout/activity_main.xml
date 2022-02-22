@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.MainActivity">
+
+    <EditText
+        android:id="@+id/editTextTextSearchNotes"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginTop="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:ems="10"
+        android:hint="@string/search_your_notes"
+        android:inputType="textFilter"
+        android:background="@drawable/edit_text_background"
+        android:textSize="@dimen/high_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:layout_marginBottom="@dimen/screen_padding"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        android:onClick="addNote"
+        android:tint="@android:color/darker_gray"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="@android:color/darker_gray"
+        app:srcCompat="@drawable/ic_add" />
+
+    <TextView
+        android:id="@+id/pinned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:textSize="@dimen/low_text_size"
+        android:text="@string/pinned"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextSearchNotes"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextSearchNotes" />
+
+    <TextView
+        android:id="@+id/other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/low_text_size"
+        android:text="@string/other"
+        app:layout_constraintBottom_toTopOf="@+id/rvNotesUnpinned"
+        app:layout_constraintStart_toStartOf="@+id/pinned"
+        app:layout_constraintTop_toBottomOf="@+id/rvNotesPinned" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNotesUnpinned"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/addButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/other"
+        app:spanCount="2" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNotesPinned"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginEnd="@dimen/screen_padding"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/other"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pinned"
+        app:spanCount="2" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="smallImageStyle">
+        <item name="android:layout_width">@dimen/small_image_dimen</item>
+        <item name="android:layout_height">@dimen/small_image_dimen</item>
+    </style>
+
+    <style name="bigImageStyle">
+        <item name="android:layout_width">@dimen/big_image_dimen</item>
+        <item name="android:layout_height">@dimen/big_image_dimen</item>
+    </style>
+
+    <style name="smallTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/low_text_size</item>
+    </style>
+
+    <style name="temperatureBigTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/high_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="detailLabelStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textSize">@dimen/low_text_size</item>
+    </style>
+
+    <style name="detailValueStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/low_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".details.DetailsActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNoteName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/backView"
+        android:layout_width="@dimen/image_dimen"
+        android:layout_height="@dimen/image_dimen"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginTop="@dimen/screen_padding"
+        android:clickable="true"
+        android:onClick="goBack"
+        app:layout_constraintStart_toStartOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
+        app:srcCompat="@drawable/ic_back" />
+
+    <ImageView
+        android:id="@+id/pinView"
+        android:layout_width="@dimen/image_dimen"
+        android:layout_height="@dimen/image_dimen"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:clickable="true"
+        android:onClick="togglePin"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="@+id/backView"
+        app:layout_constraintEnd_toEndOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/backView"
+        app:srcCompat="@drawable/ic_pin" />
+
+    <EditText
+        android:id="@+id/editTextNoteName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:textSize="@dimen/high_text_size"
+        android:background="@color/white"
+        android:ems="10"
+        android:hint="@string/type_name_here"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNoteName"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUnchecked"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_marginTop="@dimen/vertical_margin"
+                android:layout_marginEnd="@dimen/screen_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/plusButton"
+                android:layout_width="@dimen/image_dimen"
+                android:layout_height="@dimen/image_dimen"
+                app:tint="@color/gray"
+                android:clickable="true"
+                android:onClick="addItem"
+                android:layout_marginStart="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/vertical_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvUnchecked"
+                app:srcCompat="@drawable/ic_add" />
+
+            <TextView
+                android:id="@+id/addItem"
+                android:textSize="@dimen/low_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding"
+                android:text="@string/list_item"
+                android:clickable="true"
+                android:onClick="addItem"
+                app:layout_constraintBottom_toBottomOf="@+id/plusButton"
+                app:layout_constraintStart_toEndOf="@+id/plusButton"
+                app:layout_constraintTop_toTopOf="@+id/plusButton" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginStart="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/vertical_margin"
+                android:layout_marginEnd="@dimen/screen_padding"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/addItem" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvChecked"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/vertical_margin"
+                android:layout_marginEnd="@dimen/screen_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

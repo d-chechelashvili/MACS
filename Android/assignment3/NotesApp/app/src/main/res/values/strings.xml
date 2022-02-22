@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">NotesApp</string>
+    <string name="search_your_notes">Search your notes</string>
+    <string name="other">OTHER</string>
+    <string name="pinned">PINNED</string>
+    <string name="checkbox">CheckBox</string>
+    <string name="header">Header</string>
+    <string name="textview">TextView</string>
+    <string name="more">...</string>
+    <string name="type_name_here">Type name here</string>
+    <string name="list_item">List item</string>
+    <string name="enter_text_here">Enter text here</string>
+</resources>

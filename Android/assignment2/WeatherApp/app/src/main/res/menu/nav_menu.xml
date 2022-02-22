@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ic_today"
+        android:icon="@drawable/today"
+        android:title="Today"/>
+
+    <item
+        android:id="@+id/ic_hourly"
+        android:icon="@drawable/hourly"
+        android:title="Hourly"/>
+
+</menu>

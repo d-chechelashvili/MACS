@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/low_margin"
+        app:layout_constraintBottom_toTopOf="@+id/navBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cityName" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_navigation_height"
+        app:backgroundTint="@color/navBarColor"
+        app:itemIconTint="@color/white"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/nav_menu" />
+
+    <ImageView
+        android:id="@+id/GeorgiaImage"
+        android:layout_marginTop="@dimen/low_margin"
+        android:onClick="loadForecast"
+        app:layout_constraintEnd_toStartOf="@+id/UKImage"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/georgia"
+        style="@style/smallImageStyle"/>
+
+    <ImageView
+        android:id="@+id/UKImage"
+        android:onClick="loadForecast"
+        app:layout_constraintBottom_toBottomOf="@+id/GeorgiaImage"
+        app:layout_constraintEnd_toStartOf="@+id/JamaicaImage"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/GeorgiaImage"
+        app:layout_constraintTop_toTopOf="@+id/GeorgiaImage"
+        app:srcCompat="@drawable/uk"
+        style="@style/smallImageStyle"/>
+
+    <ImageView
+        android:id="@+id/JamaicaImage"
+        android:onClick="loadForecast"
+        app:layout_constraintBottom_toBottomOf="@+id/UKImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/UKImage"
+        app:layout_constraintTop_toTopOf="@+id/UKImage"
+        app:srcCompat="@drawable/jamaica"
+        style="@style/smallImageStyle"/>
+
+    <TextView
+        android:id="@+id/cityName"
+        android:text="@string/tbilisi"
+        android:layout_marginTop="@dimen/high_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/UKImage"
+        style="@style/smallTextStyle" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

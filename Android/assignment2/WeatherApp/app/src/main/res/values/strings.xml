@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Weather App</string>
+    <string name="tbilisi">TBILISI</string>
+    <string name="london">LONDON</string>
+    <string name="kingston">KINGSTON</string>
+    <string name="defaultText">DefaultText</string>
+    <string name="details">DETAILS</string>
+    <string name="temperature">Temperature</string>
+    <string name="feels_like">Feels Like</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="weatherBaseUrl">https://api.openweathermap.org/data/2.5/</string>
+    <string name="apiKey">aaa274812b9713df7f2a9c4c39e635c8</string>
+    <string name="units">metric</string>
+</resources>
