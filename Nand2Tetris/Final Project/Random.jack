@@ -1,0 +1,22 @@
+class Random {
+
+   field int seed;
+
+   constructor Random new(int Aseed){
+      let seed = Aseed;
+      return this;
+   }
+
+   method void dispose(){
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method int randomInt(int range){
+      let seed = seed + 20251;
+      if(seed < 0){
+         let seed = seed - 32767 - 1;
+      }
+      return Utils.mod(seed, range);
+   }
+}

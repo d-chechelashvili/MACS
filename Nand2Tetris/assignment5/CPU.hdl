@@ -1,0 +1,109 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Hack CPU (Central Processing unit), consisting of an ALU,
+ * two registers named A and D, and a program counter named PC.
+ * The CPU is designed to fetch and execute instructions written in 
+ * the Hack machine language. In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM==0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time step. If reset==1 then the 
+ * CPU jumps to address 0 (i.e. pc is set to 0 in next time step) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    //if it's C instruction and d3=1 then we write to memory
+    And(a=instruction[15], b=instruction[3], out=writeM); 
+
+    //we either have A instruction and left 15 bits of it are address, or we have C instruction and we feed ALU output into A register
+    Mux16(a[15]=false, a[0..14]=instruction[0..14], b=ALUOut, sel=instruction[15], out=Aaddress);
+    Not(in=instruction[15], out=AInstruction);
+    //if it's A instruction or C instruction which has d1 bit set to 1, then we write in A register
+    Or(a=AInstruction, b=instruction[5], out=writeA); 
+    ARegister(in=Aaddress, load=writeA, out=AOut, out[0..14]=addressM);
+
+    //if it is C instruction, then we choose if we feed A or M to ALU
+    And(a=instruction[15], b=instruction[12], out=AM);
+    Mux16(a=AOut, b=inM, sel=AM, out=AorM);
+
+    //if it is C instruction which has d2 bit set to 1, then we write in D register
+    And(a=instruction[15], b=instruction[4], out=writeD);
+    DRegister(in=ALUOut, load=writeD, out=DOut);
+
+    ALU(x=DOut, y=AorM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUOut, out=outM, zr=ALUzr, ng=ALUng);
+    
+    //BEHOLD, BEYOND THIS POINT IS THE DUMBEST AND MOST BRUTE FORCE SOLUTION OF PC LOGIC
+    //it's so dumb that it doesn't even need comments XD 
+
+    Not(in=instruction[0], out=NOTj3);
+    Not(in=instruction[1], out=NOTj2);
+    Not(in=instruction[2], out=NOTj1);
+
+    Not(in=NOTj3, out=j3);
+    Not(in=NOTj2, out=j2);
+    Not(in=NOTj1, out=j1);
+
+    And(a=NOTj1, b=NOTj2, out=tempJGT);
+    And(a=tempJGT, b=j3, out=JGT);
+    Or(a=ALUzr, b=ALUng, out=zrORng);
+    Not(in=zrORng, out=positive);
+    And(a=JGT, b=positive, out=JGTHappened);
+
+    And(a=NOTj1, b=j2, out=tempJEQ);
+    And(a=tempJEQ, b=NOTj3, out=JEQ);
+    And(a=ALUzr, b=JEQ, out=JEQHappened);
+
+    And(a=NOTj1, b=j2, out=tempJGE);
+    And(a=tempJGE, b=j3, out=JGE);
+    Not(in=ALUng, out=notNegative);
+    And(a=notNegative, b=JGE, out=JGEHappened);
+
+    And(a=j1, b=NOTj2, out=tempJLT);
+    And(a=tempJLT, b=NOTj3, out=JLT);
+    And(a=ALUng, b=JLT, out=JLTHappened);
+
+    And(a=j1, b=NOTj2, out=tempJNE);
+    And(a=tempJNE, b=j3, out=JNE);
+    Not(in=ALUzr, out=notZero);
+    And(a=notZero, b=JNE, out=JNEHappened);
+
+    And(a=j1, b=j2, out=tempJLE);
+    And(a=tempJLE, b=NOTj3, out=JLE);
+    Not(in=positive, out=notPositive);
+    And(a=notPositive, b=JLE, out=JLEHappened);
+
+    And(a=j1, b=j2, out=tempJMP);
+    And(a=tempJMP, b=j3, out=JMPHappened);
+
+    Or8Way(in[0]=false, in[1]=JGTHappened, in[2]=JEQHappened, in[3]=JGEHappened, in[4]=JLTHappened, in[5]=JNEHappened, in[6]=JLEHappened, in[7]=JMPHappened, out=jumpHappened);
+    And(a=instruction[15], b=jumpHappened, out=shouldJump);
+    
+    PC(in=AOut, load=shouldJump, inc=true, reset=reset, out[0..14]=pc);
+}

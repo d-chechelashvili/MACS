@@ -1,0 +1,26 @@
+function Utils.abs 0
+push argument 0
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 0
+push constant 1
+neg
+call Math.multiply 2
+return
+label IF_FALSE0
+push argument 0
+return
+function Utils.mod 1
+push argument 0
+push argument 0
+push argument 1
+call Math.divide 2
+push argument 1
+call Math.multiply 2
+sub
+pop local 0
+push local 0
+return

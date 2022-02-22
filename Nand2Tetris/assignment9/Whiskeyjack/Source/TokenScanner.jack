@@ -1,0 +1,74 @@
+class TokenScanner{
+   field String str;
+   field int pos;
+   field char delimiter;
+   
+
+   constructor TokenScanner new(String toScan){
+      var String space;
+      let space = " ";
+      let delimiter = space.charAt(0);
+      do space.dispose();
+      let str = toScan;
+      let pos = 0;
+      do getToNext();
+      return this;
+   }
+
+   method void dispose(){
+      do str.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method boolean hasNext(){
+      if (pos < str.length()){
+         return true;
+      }
+      return false;
+   }
+
+   method String nextToken(){
+      var String next;
+      var boolean break;
+      var char ch;
+      let next = String.new(str.length());
+      let ch = str.charAt(pos);
+      if(Utils.isOperator(ch)){
+         do next.appendChar(ch);
+      }else{
+         if(Utils.isDigit(ch)){
+            let break = false;
+            while(hasNext() & (~break)){
+               let ch = str.charAt(pos);
+               if(Utils.isDigit(ch)){
+                  do next.appendChar(ch);
+                  let pos = pos + 1;
+               }else{
+                  let break = true;
+               }
+            }
+            let pos = pos - 1;
+         }else{
+            return "ERROR";
+         }
+      }
+
+      let pos = pos + 1;
+      do getToNext();
+      return next;
+   }
+
+   method void getToNext(){
+      var boolean break;
+      let break = false;
+      while(hasNext() & (~break)){
+         if(str.charAt(pos) = delimiter){
+            let pos = pos + 1;
+         }else{
+            let break = true;
+         }
+      }
+      return;
+   }
+}

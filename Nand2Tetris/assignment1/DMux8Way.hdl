@@ -1,0 +1,36 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/DMux8Way.hdl
+
+/**
+ * 8-way demultiplexor:
+ * {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000
+ *                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001
+ *                            etc.
+ *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111
+ */
+
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    //let's start with distinguishing only by first bit.
+    //it is the best way because it gives us only two branches
+    //and both of them have 2 bits left, so they can be solved by 1 DMux4Way
+    DMux(in=in, sel=sel[0], a=firstIsZero, b=firstIsOne);
+
+    DMux4Way(in=firstIsZero, sel=sel[1..2], a=a, b=c, c=e, d=g);
+    DMux4Way(in=firstIsOne, sel=sel[1..2], a=b, b=d, c=f, d=h);
+
+    //my first solution:
+    //starting with first 2 bits gave us 4 branches
+    //so I had to use one chip for each branch
+    
+    // DMux4Way(in=in, sel=sel[0..1], a=first2IsZero, b=first2IsOne, c=first2IsTwo, d=first2IsThree);
+    // DMux(in=first2IsZero, sel=sel[2], a=a, b=e);
+    // DMux(in=first2IsOne, sel=sel[2], a=b, b=f);
+    // DMux(in=first2IsTwo, sel=sel[2], a=c, b=g);
+    // DMux(in=first2IsThree, sel=sel[2], a=d, b=h);
+}

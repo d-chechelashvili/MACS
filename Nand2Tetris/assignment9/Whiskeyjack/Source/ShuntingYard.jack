@@ -1,0 +1,154 @@
+class ShuntingYard{
+   
+   function String evaluate(String expression){
+      var TokenScanner tk;
+      var Stack operandStack;
+      var Stack operatorStack;
+      var String answer; 
+     
+      let tk = TokenScanner.new(expression);
+      let operandStack = Stack.new();
+      let operatorStack = Stack.new();
+
+      let answer = ShuntingYard.runShuntingYard(tk, operandStack, operatorStack);
+
+      do tk.dispose();
+      do operandStack.dispose();
+      do operatorStack.dispose();
+      return answer;
+   }
+
+
+   function String runShuntingYard(TokenScanner tk, Stack operandStack, Stack operatorStack){
+      var int valid;
+      var String answer;
+
+      let valid = ShuntingYard.parseExpression(tk, operandStack, operatorStack);
+
+      if(valid = -404){
+         return "Invalid Expression!";
+      }
+     
+      //evaluate whatever is left
+      while(~(operatorStack.isEmpty())){
+         let valid = ShuntingYard.evalTop(operandStack, operatorStack);
+         if(valid = -404){
+            return "Invalid Expression!";
+         }
+      }
+
+      let answer = String.new(30);
+      do answer.setInt(operandStack.pop());
+      
+      if(~(operandStack.isEmpty())){
+         return "Invalid Expression!";
+      }
+      return answer;
+   }
+
+
+   function int parseExpression(TokenScanner tk, Stack operandStack, Stack operatorStack){
+      var String token;
+      var boolean valid;
+      let valid = true;
+      while(tk.hasNext()){
+         let token = tk.nextToken();
+
+         if (token.charAt(0) = 69){
+            do token.dispose();
+            return -404;
+         }
+
+         let valid = ShuntingYard.parseToken(operandStack, operatorStack, token);
+         if (~valid){
+            return -404;
+         }
+         
+         do token.dispose();
+      }
+      return 1;
+   }
+
+
+   function boolean parseToken(Stack operandStack, Stack operatorStack, String token){
+      var char currOperator;
+      var char op;
+      var int valid;
+      
+      if(Utils.isNumber(token)){
+         do operandStack.push(token.intValue());
+
+      }else{
+         let currOperator = token.charAt(0);
+         if (currOperator = 40) { // '('
+            do operatorStack.push(currOperator);
+
+         }else{
+            if (currOperator = 41){ // ')'
+               while(~(operatorStack.isEmpty()) & ~(operatorStack.peek() = 40)){
+                  let valid = ShuntingYard.evalTop(operandStack, operatorStack);
+                  if(valid = -404){
+                     return false;
+                  }
+               }
+               //only opening parenthesis should be left
+               let op = operatorStack.pop();
+               if (~(op = 40)){
+                  return false;
+               }
+
+            }else{
+               while(~(operatorStack.isEmpty()) & (~(ShuntingYard.precedenceOf(operatorStack.peek()) < ShuntingYard.precedenceOf(currOperator)))){
+                  let valid = ShuntingYard.evalTop(operandStack, operatorStack);
+                  if(valid = -404){
+                   return false;
+                  }
+               }
+               do operatorStack.push(currOperator);
+            }
+         }
+      }
+      return true;
+   }
+
+   function int evalTop(Stack operandStack, Stack operatorStack){
+      var int currVal1;
+      var int currVal2;
+      var char operator;
+      let currVal2 = operandStack.pop();
+      let currVal1 = operandStack.pop();
+      let operator = operatorStack.pop();
+
+      if ((operator = -404) | (currVal1 = -404) | (currVal2 = -404)){
+         return -404;
+      }
+
+      do operandStack.push(ShuntingYard.evalOperator(currVal1, currVal2, operator));
+      return 1;
+   }
+
+
+   function int evalOperator(int val1, int val2, char operator){
+      if (operator = 43){ //+
+         return val1 + val2;
+      }
+      if (operator = 45){ //-
+         return val1 - val2;
+      }
+      if (operator = 42){ //*
+         return val1 * val2;
+      }
+      return val1 / val2;  
+   }
+
+
+   function int precedenceOf(char operator){
+      if((operator = 43) | (operator = 45)){
+         return 1;
+      }
+      if((operator = 42) | (operator = 47)){
+         return 2;
+      }
+      return 0;
+   }
+}

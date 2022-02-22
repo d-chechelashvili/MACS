@@ -1,0 +1,16 @@
+class Utils{
+
+   function int abs(int a){
+      if(a < 0){
+         return a * (-1);
+      }
+
+      return a;
+   }
+
+   function int mod(int x, int y){
+      var int res;
+      let res = x - ((x / y) * y);
+      return res;
+   }
+}

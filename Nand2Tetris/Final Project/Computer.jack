@@ -1,0 +1,45 @@
+class Computer {
+
+   field CellVector eligibleCells;
+
+   constructor Computer new(){
+      var int i, j, cellNumber;
+      var Cell tempCell;
+      let cellNumber = 10;
+      let eligibleCells = CellVector.new();
+      let i = 0;
+      while(i < cellNumber){
+         let j = 0;
+         while(j < cellNumber){
+            let tempCell = Cell.new(j, i, 0);
+            do eligibleCells.append(tempCell);
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+      return this;
+   }
+
+   method void dispose(){
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method Array chooseXY(Random random){
+      var int randomPos;
+      var Array res;
+      var Cell cell;
+      let res = Array.new(2);
+      let randomPos = random.randomInt(eligibleCells.size());
+
+      let cell = eligibleCells.get(randomPos);
+      let res[0] = cell.getX();
+      let res[1] = cell.getY();
+      do eligibleCells.remove(randomPos);
+      return res;
+   }
+
+   
+
+   
+}

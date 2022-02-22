@@ -1,0 +1,397 @@
+function Cell.new 0
+push constant 6
+call Memory.alloc 1
+pop pointer 0
+push argument 2
+pop this 0
+push argument 0
+pop this 1
+push argument 1
+pop this 2
+push constant 0
+pop this 3
+push constant 0
+pop this 4
+push constant 0
+pop this 5
+push pointer 0
+return
+function Cell.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Cell.getX 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Cell.getY 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function Cell.fillCell 0
+push argument 0
+pop pointer 0
+push this 1
+push this 2
+push this 1
+push this 0
+add
+push constant 2
+sub
+push this 2
+push this 0
+add
+push constant 2
+sub
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Cell.putShip 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push pointer 0
+call Cell.fillCell 1
+pop temp 0
+push constant 0
+return
+function Cell.clear 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push pointer 0
+call Cell.fillCell 1
+pop temp 0
+push constant 0
+return
+function Cell.getState 0
+push argument 0
+pop pointer 0
+push this 3
+return
+function Cell.isChecked 0
+push argument 0
+pop pointer 0
+push this 5
+return
+function Cell.setChecked 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+pop this 5
+push constant 0
+return
+function Cell.setState 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 3
+push constant 0
+return
+function Cell.drawState 0
+push argument 0
+pop pointer 0
+push pointer 0
+push argument 1
+call Cell.setState 2
+pop temp 0
+push argument 1
+call Cell.clearState 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call Cell.clear 1
+pop temp 0
+label IF_FALSE0
+push argument 1
+call Cell.shipState 0
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push pointer 0
+call Cell.putShip 1
+pop temp 0
+label IF_FALSE1
+push argument 1
+call Cell.missedState 0
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push pointer 0
+call Cell.markMissed 1
+pop temp 0
+label IF_FALSE2
+push argument 1
+call Cell.hitState 0
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+call Cell.markHit 1
+pop temp 0
+label IF_FALSE3
+push argument 1
+call Cell.sunkState 0
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push pointer 0
+call Cell.markSunk 1
+pop temp 0
+label IF_FALSE4
+push constant 0
+return
+function Cell.markMissed 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 1
+push this 0
+add
+push constant 6
+sub
+push this 2
+push constant 8
+add
+push this 1
+push constant 2
+add
+push this 2
+push constant 8
+add
+call Screen.drawLine 4
+pop temp 0
+push this 1
+push this 0
+add
+push constant 6
+sub
+push this 2
+push this 0
+add
+push constant 8
+sub
+push this 1
+push constant 2
+add
+push this 2
+push this 0
+add
+push constant 8
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 1
+push constant 7
+add
+push this 2
+push constant 5
+add
+push this 1
+push constant 3
+add
+push this 2
+push this 0
+add
+push constant 5
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 1
+push this 0
+add
+push constant 7
+sub
+push this 2
+push constant 5
+add
+push this 1
+push this 0
+add
+push constant 11
+sub
+push this 2
+push this 0
+add
+push constant 5
+sub
+call Screen.drawLine 4
+pop temp 0
+push constant 0
+return
+function Cell.markSunk 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Cell.clear 1
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 1
+push constant 1
+add
+push this 2
+push constant 1
+add
+push this 1
+push this 0
+add
+push constant 2
+sub
+push this 2
+push this 0
+add
+push constant 2
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 1
+push constant 1
+add
+push this 2
+push this 0
+add
+push constant 3
+sub
+push this 1
+push this 0
+add
+push constant 3
+sub
+push this 2
+push constant 1
+add
+call Screen.drawLine 4
+pop temp 0
+push constant 0
+return
+function Cell.markHit 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Cell.clear 1
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 1
+push this 0
+push constant 2
+call Math.divide 2
+add
+push constant 1
+sub
+push this 2
+push constant 2
+add
+push this 1
+push this 0
+push constant 2
+call Math.divide 2
+add
+push constant 1
+sub
+push this 2
+push this 0
+add
+push constant 9
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 1
+push this 0
+push constant 2
+call Math.divide 2
+add
+push constant 1
+sub
+push this 2
+push this 0
+add
+push constant 6
+sub
+push this 1
+push this 0
+push constant 2
+call Math.divide 2
+add
+push constant 1
+sub
+push this 2
+push this 0
+add
+push constant 4
+sub
+call Screen.drawLine 4
+pop temp 0
+push constant 0
+return
+function Cell.clearState 0
+push constant 0
+return
+function Cell.shipState 0
+push constant 1
+return
+function Cell.missedState 0
+push constant 2
+return
+function Cell.hitState 0
+push constant 3
+return
+function Cell.sunkState 0
+push constant 4
+return
+function Cell.print 0
+push argument 0
+pop pointer 0
+push constant 1
+call String.new 1
+push constant 91
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push this 1
+call Output.printInt 1
+pop temp 0
+push constant 1
+call String.new 1
+push constant 44
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push this 2
+call Output.printInt 1
+pop temp 0
+push constant 1
+call String.new 1
+push constant 93
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 0
+return

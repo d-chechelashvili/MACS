@@ -1,0 +1,142 @@
+function Main.main 1
+call Queue.new 0
+pop local 0
+label WHILE_EXP0
+push constant 0
+not
+not
+if-goto WHILE_END0
+push local 0
+call Queue.size 1
+push constant 23
+lt
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+call Main.scroll 1
+pop temp 0
+label IF_FALSE0
+push local 0
+call Main.REP 1
+pop temp 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Main.REP 5
+push constant 4
+call String.new 1
+push constant 62
+call String.appendChar 2
+push constant 62
+call String.appendChar 2
+push constant 62
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+pop local 0
+push local 0
+call Keyboard.readLine 1
+pop local 2
+push local 0
+push local 2
+call Utils.concatenate 2
+pop local 3
+push local 0
+call String.dispose 1
+pop temp 0
+push argument 0
+push local 3
+call Queue.enqueue 2
+pop temp 0
+push constant 5
+call String.new 1
+push constant 67
+call String.appendChar 2
+push constant 76
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 65
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+pop local 1
+push local 2
+push local 1
+call Utils.stringEquals 2
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+call Screen.clearScreen 0
+pop temp 0
+push constant 0
+push constant 0
+call Output.moveCursor 2
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push local 2
+call ShuntingYard.evaluate 1
+pop local 4
+push local 4
+call Output.printString 1
+pop temp 0
+call Output.println 0
+pop temp 0
+push argument 0
+push local 4
+call Queue.enqueue 2
+pop temp 0
+label IF_END0
+push local 1
+call String.dispose 1
+pop temp 0
+push constant 0
+return
+function Main.scroll 3
+push argument 0
+call Queue.dequeue 1
+pop temp 0
+push argument 0
+call Queue.dequeue 1
+pop temp 0
+call Screen.clearScreen 0
+pop temp 0
+push constant 0
+push constant 0
+call Output.moveCursor 2
+pop temp 0
+push argument 0
+call Queue.size 1
+pop local 1
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push local 1
+lt
+not
+if-goto WHILE_END0
+push argument 0
+call Queue.dequeue 1
+pop local 2
+push local 2
+call Output.printString 1
+pop temp 0
+call Output.println 0
+pop temp 0
+push argument 0
+push local 2
+call Queue.enqueue 2
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return

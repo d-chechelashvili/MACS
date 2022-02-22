@@ -1,0 +1,165 @@
+class ShipVector{
+   field int allocLen;
+   field int logLen;
+   field Array elems;
+
+   constructor ShipVector new(){
+      let logLen = 0;
+	   let allocLen = 4;
+	   let elems = Array.new(allocLen);
+      return this;
+   }
+
+   method void dispose(){
+      do elems.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method int size(){
+      return logLen;
+   }
+
+   method boolean isEmpty(){
+      if (logLen = 0){
+         return true;
+      }
+      return false;
+   }
+
+   method void clear(){
+      do elems.dispose();
+      let logLen = 0;
+	   let allocLen = 4;
+	   let elems = Array.new(allocLen);
+      return;
+   }
+
+   method void grow(){
+      var Array newArray;
+      var int i;
+      let allocLen = allocLen * 2;
+      let newArray = Array.new(allocLen);
+      let i = 0;
+      while (i < logLen) {
+         let newArray[i] = elems[i];
+         let i = i + 1;
+      }
+      do elems.dispose();
+      let elems = newArray;
+      return;
+   }
+
+   method void append(Ship ship){
+      if (allocLen = logLen) {
+		   do grow();
+	   }
+      let elems[logLen] = ship;
+      let logLen = logLen + 1;
+      return;
+   }
+
+   method Ship get(int index){
+      var Ship elem;
+      var String errorString;
+
+      if((index  < 0) | (index > (logLen - 1))){
+         let errorString = "ERROR INVALID INDEX";
+         do Output.println();
+         do Output.printString(errorString);
+         do Output.println();
+         do errorString.dispose();
+         return null;
+      }
+
+      let elem = elems[index];
+      return elem;
+   }
+
+   method boolean validate(){
+      if(~(validateShips())){
+         return false;
+      }
+      if (~(validateArrangement())){
+         return false;
+      }
+      return true;
+   }
+
+   method boolean validateArrangement(){
+      var int i, j, a, b, cell1X, cell2X, cell1Y, cell2Y;
+      var Ship ship1, ship2;
+      let i = 0;
+      while (i < logLen){
+         let ship1 = get(i);
+         let j = i + 1;
+         while (j < logLen){
+            let ship2 = get(j);
+            let a = 0;
+            while(a < ship1.getLength()){
+               let cell1X = ship1.getStartX() + ((Utils.mod(ship1.getDirection(), 2)) * a);
+               let cell1Y = ship1.getStartY() + (Math.max((ship1.getDirection() - 1), 0) * a);
+               let b = 0;
+               while(b < ship2.getLength()){
+                  let cell2X = ship2.getStartX() + ((Utils.mod(ship2.getDirection(), 2)) * b);
+                  let cell2Y = ship2.getStartY() + (Math.max((ship2.getDirection() - 1), 0) * b);
+                  if((~((Utils.abs((cell1X - cell2X))) > 1)) & (~((Utils.abs((cell1Y - cell2Y))) > 1))){
+                     return false;
+                  }
+                  let b = b + 1;
+               }
+               let a = a + 1;
+            }
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+      return true;
+   }
+
+   method boolean validateShips(){
+      var int i, length, count;
+      var Ship ship;
+      var Array counts;
+      if(~(logLen = 7)){
+         return false;
+      }
+
+      let counts = Array.new(6);
+      let counts[1] = 2;
+      let counts[2] = 2;
+      let counts[3] = 1;
+      let counts[4] = 1;
+      let counts[5] = 1;
+      let i = 0;
+      while (i < logLen){
+         let ship = elems[i];
+         let length = ship.getLength();
+         let count = counts[length];
+         let counts[length] = count - 1;
+         let i = i + 1;
+      }
+
+      let i = 1;
+      while (i < 6){
+         if(~(counts[i] = 0)){
+            return false;
+         }
+         let i = i + 1;
+      }
+      return true;
+   }
+
+   method void print(){
+      var int i;
+      var Ship ship;
+      let i = 0;
+      while (i < logLen){
+         let ship = elems[i];
+         do ship.print();
+         let i = i + 1;
+      }
+      return;
+   }
+
+}

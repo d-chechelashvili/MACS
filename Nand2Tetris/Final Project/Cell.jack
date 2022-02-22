@@ -1,0 +1,142 @@
+class Cell{
+
+   field int cellSize; //width/height of single cell in pixels
+   field int leftOffset; //offset from left border of screen in pixels
+   field int topOffset;
+   field int state; // 0 - clear, 1 ship
+   field int proximityScore;
+   field boolean checked;
+
+   constructor Cell new(int AleftOffset, int AtopOffset, int AcellSize) {
+      let cellSize = AcellSize;
+      let leftOffset = AleftOffset;
+      let topOffset = AtopOffset;
+      let state = 0;
+      let proximityScore = 0;
+      let checked = false;
+      return this;
+   }
+
+   method void dispose(){
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method int getX(){
+      return leftOffset;
+   }
+
+   method int getY(){
+      return topOffset;
+   }
+
+   method void fillCell(){
+      do Screen.drawRectangle(leftOffset, topOffset, leftOffset + cellSize - 2, topOffset + cellSize - 2);
+      return;
+   }
+
+   method void putShip(){
+      do Screen.setColor(true);
+      do fillCell();
+      return;
+   }
+
+   method void clear(){
+      do Screen.setColor(false);
+      do fillCell();
+      return;
+   }
+
+   method int getState(){
+      return state;
+   }
+
+   method boolean isChecked(){
+      return checked;
+   }
+
+   method void setChecked(){
+      let checked = true;
+      return;
+   }
+
+   method void setState(int Astate){
+      let state = Astate;
+      return;
+   }
+
+   method void drawState(int Astate){
+      do setState(Astate);
+      if (Astate = Cell.clearState()){
+         do clear();
+      }
+      if (Astate = Cell.shipState()){
+         do putShip();
+      }
+      if (Astate = Cell.missedState()){
+         do markMissed();
+      }
+      if (Astate = Cell.hitState()){
+         do markHit();
+      }
+      if (Astate = Cell.sunkState()){
+         do markSunk();
+      }
+
+      return;
+   }
+
+   method void markMissed(){
+      do Screen.setColor(true);
+      do Screen.drawLine((leftOffset + cellSize - 6), (topOffset + 8), (leftOffset + 2), (topOffset + 8));
+      do Screen.drawLine((leftOffset + cellSize - 6), (topOffset + cellSize - 8), (leftOffset + 2), (topOffset + cellSize - 8));
+      do Screen.drawLine((leftOffset + 7), (topOffset + 5), (leftOffset + 3), (topOffset + cellSize - 5));
+      do Screen.drawLine((leftOffset + cellSize - 7), (topOffset + 5), (leftOffset + cellSize - 11), (topOffset + cellSize - 5));
+      return;
+   }
+
+   method void markSunk(){
+      do clear();
+      do Screen.setColor(true);
+      do Screen.drawLine(leftOffset + 1, topOffset + 1, (leftOffset + cellSize - 2), (topOffset + cellSize - 2));
+      do Screen.drawLine(leftOffset + 1, (topOffset + cellSize - 3), (leftOffset + cellSize - 3), topOffset + 1);
+      return;
+   }
+
+   method void markHit(){
+      do clear();
+      do Screen.setColor(true);
+      do Screen.drawLine((leftOffset + (cellSize/2) - 1), topOffset + 2, (leftOffset + (cellSize/2) - 1), (topOffset + cellSize - 9));
+      do Screen.drawLine((leftOffset + (cellSize/2) - 1), (topOffset + cellSize - 6), (leftOffset + (cellSize/2) - 1), (topOffset + cellSize - 4));
+      return;
+   }
+
+   function int clearState(){
+      return 0;
+   }
+
+   function int shipState(){
+      return 1;
+   }
+
+   function int missedState(){
+      return 2;
+   }
+
+   function int hitState(){
+      return 3;
+   }
+
+   function int sunkState(){
+      return 4;
+   }
+
+   method void print(){
+      do Output.printString("[");
+      do Output.printInt(leftOffset);
+      do Output.printString(",");
+      do Output.printInt(topOffset);
+      do Output.printString("]");
+      return;
+   }
+}

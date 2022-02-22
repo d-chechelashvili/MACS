@@ -1,0 +1,87 @@
+class Utils{
+
+   function boolean isDigit(char ch){
+      var String digitsString;
+      var boolean answer;
+      let digitsString = "0123456789";
+      let answer = Utils.isContained(ch, digitsString);
+      do digitsString.dispose();
+      return answer;
+   }
+
+   function boolean isNumber(String str){
+      var boolean answer;
+      var char currCh;
+      var int i;
+      let answer = true;
+      let i = 0;
+      while(i < str.length()){
+         let currCh = str.charAt(i);
+         if(~(Utils.isDigit(currCh))){
+            let answer = false;
+         }
+         let i = i + 1;
+      }
+      return answer;
+   }
+
+   function boolean isOperator(char ch){
+      var String operatorsString;
+      var boolean answer;
+      let operatorsString = "+-*/()";
+      let answer = Utils.isContained(ch, operatorsString);
+      do operatorsString.dispose();
+      return answer;
+   }
+
+   function boolean isContained(char ch, String string){
+      var boolean isContained;
+      var int i;
+      let isContained = false;
+      let i = 0;
+      while(i < string.length() & (~isContained)){
+         if(ch = string.charAt(i)){
+            let isContained = true;
+         }
+         let i = i + 1;
+      }
+      return isContained;
+   }
+
+   function boolean stringEquals(String str1, String str2){
+      var int i;
+      if(~(str1.length() = str2.length())){
+         return false;
+      }
+
+      let i = 0;
+      while(i < str1.length()){
+         if(~(str1.charAt(i) = str2.charAt(i))){
+            return false;
+         }
+         let i = i + 1;
+      }
+      return true;
+   }
+
+   function String concatenate(String str1, String str2){
+      var int i;
+      var String newString;
+
+      let newString = String.new((str1.length() + str2.length()));
+      
+      let i = 0;
+      while(i < str1.length()){
+         do newString.appendChar(str1.charAt(i));
+         let i = i + 1;
+      }
+
+      let i = 0;
+      while(i < str2.length()){
+         do newString.appendChar(str2.charAt(i));
+         let i = i + 1;
+      }
+
+      return newString;
+   }
+}

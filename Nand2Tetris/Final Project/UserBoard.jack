@@ -1,0 +1,285 @@
+class UserBoard{
+
+   field int cellNumber; //number of cells in board one dimension
+   field int cellSize; //width/height of single cell in pixels
+   field int boardLeftOffset; //offset from left border of screen in pixels
+   field int boardTopOffset;
+   field Array cells;
+   field ShipVector ships;
+   field int lives;
+
+   constructor UserBoard new(int AleftOffset, int AtopOffset, int AcellNumber, int AcellSize) {
+      let cellNumber = AcellNumber;
+      let cellSize = AcellSize;
+      let boardLeftOffset = AleftOffset;
+      let boardTopOffset = AtopOffset;
+      do initCells();
+      let ships = ShipVector.new();
+      let lives = 7;
+      do Screen.setColor(true);
+      do draw();
+      return this;
+   }
+
+   method void dispose(){
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method void initCells(){
+      var int i, j, xCoord, yCoord;
+      var Array row;
+      var Cell cell;
+      let i = 0;
+
+      let cells = Array.new(cellNumber);
+      while(i < cellNumber){
+         let row = Array.new(cellNumber);
+         let cells[i] = row;
+         let j = 0;
+         while(j < cellNumber){
+            let xCoord = boardLeftOffset + (j * cellSize);
+            let yCoord = boardTopOffset + (i * cellSize);
+            let row[j] = Cell.new(xCoord, yCoord, cellSize);
+            let cell = row[j];
+            do cell.drawState(Cell.clearState());
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+      return;
+   }
+
+   method int getCellSize(){
+      return cellSize;
+   }
+
+   method int getCellNumber(){
+      return cellNumber;
+   }
+
+   method int getLeftOffset(){
+      return boardLeftOffset;
+   }
+
+   method void draw(){
+       var int i, boardLen, leftOffset, topOffset;
+       let boardLen = cellNumber * cellSize;
+       let i = 0;
+       while(i < (cellNumber + 1)){
+          let topOffset = boardTopOffset + (i * cellSize) - 1;
+          do Screen.drawLine(boardLeftOffset - 1, topOffset, (boardLeftOffset - 1 + boardLen), topOffset);
+          let i = i + 1;
+       }
+
+       let i = 0;
+       while(i < (cellNumber + 1)){
+          let leftOffset = boardLeftOffset + (i * cellSize) - 1;
+          do Screen.drawLine(leftOffset, boardTopOffset - 1, leftOffset, (boardTopOffset - 1 + boardLen));
+          let i = i + 1;
+       }
+       return;
+   }
+
+   method void restoreCellState(int x, int y){
+      var Cell cell;
+      var Array row;
+      var int state;
+      let row = cells[y];
+      let cell = row[x];
+      let state = cell.getState();
+      do cell.drawState(state);
+      return;
+   }
+
+   method void putShip(int x, int y){
+      var Cell cell;
+      var Array row;
+      let row = cells[y];
+      let cell = row[x];
+      do cell.drawState(Cell.shipState());
+      return;
+   }
+
+   method boolean validate(){
+      do saveShips();
+      //do ships.print();
+      return ships.validate();
+   }
+
+   method void saveShips(){
+      var int i, j;
+      var Ship currShip;
+      var Array row;
+      var Cell cell;
+      let i = 0;
+      while (i < cellNumber){
+         let j = 0;
+         let row = cells[i];
+         while (j < cellNumber){
+            let cell = row[j];
+            if (~(cell.isChecked())){
+               if((cell.getState()) = (Cell.shipState())){
+                  do cell.setChecked();
+                  let currShip = getShip(i, j);
+                  do ships.append(currShip);
+               }
+            }
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+      return;
+   }
+
+   method Ship getShip(int i, int j){
+      var int direction, x, y;
+      var Array row;
+      var Cell cell;
+      var Ship ship;
+      let ship = Ship.new(j, i);
+                        
+      let x = j + 1;
+      let y = i;
+      let row = cells[y];
+      if (x < cellNumber){
+         let cell = row[x];
+         if((cell.getState()) = (Cell.shipState())){
+            do cell.setChecked();
+            do ship.incrementLength();
+            do ship.setDirection(Ship.horizontal());
+            while(true){
+               let x = x + 1;
+               if(~(x < cellNumber)){
+                  return ship;
+               }
+               let cell = row[x];
+               if(~((cell.getState()) = (Cell.shipState()))){
+                  return ship;
+               }
+               do cell.setChecked();
+               do ship.incrementLength();
+            }
+         }
+      }
+
+      let x = j;
+      let y = i + 1;
+      if (y < cellNumber){
+         let row = cells[y];
+         let cell = row[x];
+         if((cell.getState()) = (Cell.shipState())){
+            do ship.setDirection(Ship.vertical());
+            do cell.setChecked();
+            do ship.incrementLength();
+            while(true){
+               let y = y + 1;
+               if(~(y < cellNumber)){
+                  return ship;
+               }
+               let row = cells[y];
+               let cell = row[x];
+               if(~((cell.getState()) = (Cell.shipState()))){
+                  return ship;
+               }
+               do cell.setChecked();
+               do ship.incrementLength();
+            }
+         }
+      }
+      
+      return ship;
+   }
+
+   // returns if the game is over
+   method boolean shoot(int x, int y){
+      var Array row;
+      var Cell cell;
+      let row = cells[y];
+      let cell = row[x];
+      if (cell.getState() = Cell.clearState()){
+         do cell.drawState(Cell.missedState());
+      }
+      if (cell.getState() = Cell.shipState()){
+         do cell.drawState(Cell.hitState());
+         do markSunkShips();
+         if (lives = 0){
+            return true;
+         }
+      }
+      //do Output.printString("Bang");
+      return false;
+   }
+
+   method void markSunkShips(){
+      var int i, j, x, y, length, temp;
+      var Ship ship;
+      var Array row;
+      var Cell cell;
+      var boolean isSunk;
+      let i = 0;
+      let temp = 0;
+      while(i < ships.size()){
+         let ship = ships.get(i);
+         let x = ship.getStartX();
+         let y = ship.getStartY();
+         let length = ship.getLength();
+         let isSunk = true;
+         if (ship.getDirection() = Ship.vertical()){
+            let j = 0;
+            while((j < length) & isSunk){
+               let row = cells[(y + j)];
+               let cell = row[x];
+               if (~(cell.getState() = Cell.hitState())){
+                  let isSunk = false;
+               }
+               let j = j + 1;
+            }
+            if (isSunk){
+               let j = 0;
+               while(j < length){
+                  let row = cells[(y + j)];
+                  let cell = row[x];
+                  do cell.drawState(Cell.sunkState());
+                  let j = j + 1;
+               } 
+               //let sunkShipCount = sunkShipCount + 1;
+               let lives = lives - 1;
+
+            }
+         }else{
+            let j = 0;
+            while((j < length) & isSunk){
+               let row = cells[y];
+               let cell = row[(x + j)];
+               if (~(cell.getState() = Cell.hitState())){
+                  let isSunk = false;
+               }
+               let j = j + 1;
+            }
+            if (isSunk){
+               let j = 0;
+               while(j < length){
+                  let row = cells[y];
+                  let cell = row[(x + j)];
+                  do cell.drawState(Cell.sunkState());
+                  let j = j + 1;
+               } 
+               //let sunkShipCount = sunkShipCount + 1;
+               let lives = lives - 1;
+            }
+         }
+         let i = i + 1;
+      }
+      return;
+   }
+
+
+   method void reset(){
+      do cells.dispose();
+      do initCells();
+      do ships.dispose();
+      let ships = ShipVector.new();
+      return;
+   }
+}

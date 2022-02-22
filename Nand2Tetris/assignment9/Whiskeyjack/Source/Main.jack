@@ -1,0 +1,63 @@
+
+class Main {
+   function void main() {
+      var Queue lineQueue;
+      let lineQueue = Queue.new();
+      while(true){
+         if (~(lineQueue.size() < 23)){
+            do Main.scroll(lineQueue);
+         }
+         do Main.REP(lineQueue);
+      }
+      return;
+   }
+
+   function void REP(Queue lineQueue){
+      var String promptString;
+      var String clearString;
+      var String expression;
+      var String line;
+      var String answer;
+      
+      let promptString = ">>> ";
+      let expression = Keyboard.readLine(promptString);
+      let line = Utils.concatenate(promptString, expression);
+      do promptString.dispose();
+      do lineQueue.enqueue(line);
+
+      let clearString = "CLEAR";
+      if(Utils.stringEquals(expression, clearString)){
+         do Screen.clearScreen();
+         do Output.moveCursor(0, 0);
+      }else{   
+         let answer = ShuntingYard.evaluate(expression);
+         do Output.printString(answer);
+         do Output.println();
+         do lineQueue.enqueue(answer);
+      }
+      
+      do clearString.dispose();
+      return;
+   }
+
+   function void scroll(Queue lineQueue){
+      var int i;
+      var int size;
+      var String line;
+      do lineQueue.dequeue();
+      do lineQueue.dequeue();
+      do Screen.clearScreen();
+      do Output.moveCursor(0, 0);
+
+      let size = lineQueue.size();
+      let i = 0;
+      while(i < size){
+         let line = lineQueue.dequeue();
+         do Output.printString(line);
+         do Output.println();
+         do lineQueue.enqueue(line);
+         let i = i + 1;
+      }
+      return;
+   }
+}

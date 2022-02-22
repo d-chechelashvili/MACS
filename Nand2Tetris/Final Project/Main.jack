@@ -1,0 +1,21 @@
+class Main {
+
+    /** Initializes a battleship game and starts running it. */
+   function void main() {
+      var BattleshipGame game;
+      var int key;
+      do BattleshipGame.newInstance();
+      let game = BattleshipGame.getInstance();
+      do game.run();
+      while (key = 0) {
+         let key = Keyboard.keyPressed();
+      }
+      if (key = 32){
+         do game.restart();
+      }
+      do game.dispose();
+
+
+      return;
+   }
+}

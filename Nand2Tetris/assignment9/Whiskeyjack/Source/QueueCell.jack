@@ -1,0 +1,28 @@
+class QueueCell{
+   field String value;
+   field QueueCell next;
+
+   constructor QueueCell new(String val, QueueCell nextCell){
+      let value = val;
+      let next = nextCell;
+      return this;
+   }
+
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method String getValue(){
+      return value;
+   }
+
+   method QueueCell getNextCell(){
+      return next;
+   }
+
+   method void setNextCell(QueueCell nextCell){
+      let next = nextCell;
+      return;
+   }
+}

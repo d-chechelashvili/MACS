@@ -1,0 +1,81 @@
+class Stack{
+   field int allocLen;
+   field int logLen;
+   field Array elems;
+
+   constructor Stack new(){
+      let logLen = 0;
+	   let allocLen = 4;
+	   let elems = Array.new(allocLen);
+      return this;
+   }
+
+   method void dispose(){
+      do elems.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method int size(){
+      return logLen;
+   }
+
+   method boolean isEmpty(){
+      if (logLen = 0){
+         return true;
+      }
+      return false;
+   }
+
+   method void grow(){
+      var Array newArray;
+      var int i;
+      let allocLen = allocLen * 2;
+      let newArray = Array.new(allocLen);
+      let i = 0;
+      while (i < logLen) {
+         let newArray[i] = elems[i];
+         let i = i + 1;
+      }
+      do elems.dispose();
+      let elems = newArray;
+      return;
+   }
+
+   method void push(int operand){
+      if (allocLen = logLen) {
+		   do grow();
+	   }
+      let elems[logLen] = operand;
+      let logLen = logLen + 1;
+      return;
+   }
+
+   method int peek(){
+      var boolean empty;
+      var int index;
+      var int lastElem;
+      var String errorString;
+      let empty = isEmpty();
+
+      if(empty){
+         let errorString = "ERROR EMPTY STACK";
+         // do Output.println();
+         // do Output.printString(errorString);
+         // do Output.println();
+         do errorString.dispose();
+         return -404;
+      }
+
+      let index = logLen - 1;
+      let lastElem = elems[index];
+      return lastElem;
+   }
+
+   method int pop(){
+      var int lastElem;
+      let lastElem = peek(); 
+	   let logLen = logLen - 1;
+	   return lastElem;
+   }
+}

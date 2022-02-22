@@ -1,0 +1,46 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/DMux4Way.hdl
+
+/**
+ * 4-way demultiplexor:
+ * {a, b, c, d} = {in, 0, 0, 0} if sel == 00
+ *                {0, in, 0, 0} if sel == 01
+ *                {0, 0, in, 0} if sel == 10
+ *                {0, 0, 0, in} if sel == 11
+ */
+
+CHIP DMux4Way {
+    IN in, sel[2];
+    OUT a, b, c, d;
+
+    PARTS:
+    //let's distinguish by first bit
+    //if first bit is 0 we keep 'in' in 'firstIsZero' and we give 'in' to 'a' and 'c'
+    //if first bit is 1 we give 'in' to 'b' and 'd'
+    DMux(in=in, sel=sel[0], a=firstIsZero, b=firstIsOne);
+
+    //after this, if second bit is 0 'in' will go to 'a' or 'c' depending on where we are already
+    //if second bit is 1 'in' will go to 'b' or 'd'
+    //other places will get 0
+    DMux(in=firstIsZero, sel=sel[1], a=a, b=c);
+    DMux(in=firstIsOne, sel=sel[1], a=b, b=d);
+
+    //my first brute force solution(works):
+    
+    // Not(in=sel[0], out=firstIsZero);
+    // Not(in=sel[1], out=secondIsZero);
+
+    // And(a=firstIsZero, b=secondIsZero, out=isA);
+    // And(a=isA, b=in, out=a);
+
+    // And(a=sel[0], b=secondIsZero, out=isB);
+    // And(a=isB, b=in, out=b);
+
+    // And(a=firstIsZero, b=sel[1], out=isC);
+    // And(a=isC, b=in, out=c);
+
+    // And(a=sel[0], b=sel[1], out=isD);
+    // And(a=isD, b=in, out=d);
+}

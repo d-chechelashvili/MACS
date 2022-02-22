@@ -1,0 +1,162 @@
+class BattleshipGame {
+
+   static BattleshipGame instance; // the singleton, a Pong game instance
+   field int sideOffset; //offset from left and right borders of screen in pixels
+   field int middleOffset; //offset from other board in pixels
+   field int upDownOffset; //offset from top and down borders of screen in pixels
+   field int randomSeed;
+   field boolean exit; // true when the game is over
+   field Cursor cursor;
+   field UserBoard userBoard;
+   field ComputerBoard computerBoard;
+   field Computer computer;
+
+
+   constructor BattleshipGame new(){
+      var int boardCellNumber, boardCellSize;
+      let boardCellNumber = 10;
+      let boardCellSize = 20;
+      let sideOffset = 28;
+      let middleOffset = 56;
+      let upDownOffset = 28;
+      let randomSeed = 0;
+      let exit = false;
+      do Screen.clearScreen();
+      do Screen.setColor(true);
+      let userBoard = UserBoard.new(sideOffset, upDownOffset, boardCellNumber, boardCellSize);
+      let computerBoard = ComputerBoard.new((sideOffset + (boardCellNumber * boardCellSize) + middleOffset), upDownOffset, boardCellNumber, boardCellSize);
+      let cursor = Cursor.new(boardCellSize, sideOffset, upDownOffset);
+      let computer = Computer.new();
+      return this;
+   }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Creates an instance of Battleship game, and stores it. */
+    function void newInstance() {
+        let instance = BattleshipGame.new();
+        return;
+    }
+    
+    /** Returns the single instance of this Battleship game. */
+    function BattleshipGame getInstance() {
+        return instance;
+    }
+
+    method void run(){
+      var char key;
+      var int x, y;
+      var boolean gameOver;
+      var Random random;
+      var Array computerShot;
+      let key = 0;
+      while (~exit) {
+         while ((key = 0) & (~exit)) {
+            let randomSeed = Utils.mod((randomSeed + 1), 32767);
+            let key = Keyboard.keyPressed();
+         }
+
+         let randomSeed = Utils.mod((randomSeed * 2), 32767);
+         let x = cursor.getX();
+         let y = cursor.getY();
+
+         if ((key > 129) & (key < 134)){
+            if(cursor.move(key)){
+               do userBoard.restoreCellState(x, y);
+            }
+         }
+
+         if(key = 128){
+            do userBoard.putShip(x, y);
+         }
+
+         if((key = 83) | (key = 115)){
+            if(userBoard.validate()){
+               let exit = true;
+            }else{
+               do userBoard.reset();
+               do cursor.draw();
+            }
+         }
+
+         while ((~(key = 0)) & (~exit)) {
+            let randomSeed = Utils.mod((randomSeed + 2), 32767);
+            let key = Keyboard.keyPressed();
+         }
+      }
+
+
+      // USER SETUP ENDED
+
+      if (exit) {
+         let random = Random.new(randomSeed);
+         let key = 0;
+         do computerBoard.generateShips(random);
+         do changeBoard();
+         while (~exit) {
+            while ((key = 0) & (~exit)) {
+               let key = Keyboard.keyPressed();
+            }
+
+            let x = cursor.getX();
+            let y = cursor.getY();
+
+            if ((key > 129) & (key < 134)){
+               if(cursor.move(key)){
+                  do computerBoard.restoreCellState(x, y);
+               }
+            }
+
+            if(key = 128){
+               let gameOver = computerBoard.shoot(x, y);
+               if (gameOver){
+                  do Screen.clearScreen();
+                  do Output.moveCursor(11, 26);
+                  do Output.printString("PLAYER WON!");
+                  return;
+               }
+               let computerShot = computer.chooseXY(random);
+               // do Output.printString("[");
+               // do Output.printInt(computerShot[0]);
+               // do Output.printString(",");
+               // do Output.printInt(computerShot[1]);
+               // do Output.printString("]");
+
+               let gameOver = userBoard.shoot(computerShot[0], computerShot[1]);
+               if (gameOver){
+                  do Screen.clearScreen();
+                  do Output.moveCursor(11, 24);
+                  do Output.printString("COMPUTER WON!");
+                  return;
+               }
+            }
+
+            while ((~(key = 0)) & (~exit)) {
+               let key = Keyboard.keyPressed();
+            }
+         }
+	   }
+
+      return;
+    }
+
+    method void changeBoard(){
+      var int x, y;
+      let exit = false;
+      let x = cursor.getX();
+      let y = cursor.getY();  
+      do cursor.changeBoard(computerBoard.getLeftOffset());
+      do userBoard.restoreCellState(x, y);
+      return;
+    }
+
+    method void restart(){
+      //  do new();
+      //  do run();
+       return;
+    }
+}

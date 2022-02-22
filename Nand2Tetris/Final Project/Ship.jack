@@ -1,0 +1,77 @@
+class Ship{
+
+   field int startX;
+   field int startY;
+   field int direction; // 0 - No direction, 1 - right, 2 - left, 3 - down, 4 - up
+   field int length;
+
+   constructor Ship new(int AstartX, int AstartY) {
+      let startX = AstartX;
+      let startY = AstartY;
+      let length = 1;
+      let direction = Ship.noDirection(); //temp
+      return this;
+   }
+
+   method void dispose(){
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method int getStartX(){
+      return startX;
+   }
+
+   method int getStartY(){
+      return startY;
+   }
+
+   method void setDirection(int Adirection){
+      let direction = Adirection;
+      return;
+   }
+
+   method int getDirection(){
+      return direction;
+   }
+
+   method void incrementLength(){
+      let length = length + 1;
+      return;
+   }
+
+   method void setLength(int Alength){
+      let length = Alength;
+      return;
+   }
+
+   method int getLength(){
+      return length;
+   }
+
+   function int noDirection(){
+      return 0;
+   }
+
+   function int horizontal(){
+      return 1;
+   }
+
+   function int vertical(){
+      return 2;
+   }
+
+   method void print(){
+      do Output.printString("|");
+      do Output.printInt(startX);
+      do Output.printString("|");
+      do Output.printInt(startY);
+      do Output.printString("|");
+      do Output.printInt(length);
+      do Output.printString("|");
+      do Output.printInt(direction);
+      do Output.printString("|");
+      return;
+   }
+
+}

@@ -1,0 +1,94 @@
+function Computer.new 4
+push constant 1
+call Memory.alloc 1
+pop pointer 0
+push constant 10
+pop local 2
+call CellVector.new 0
+pop this 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push local 2
+lt
+not
+if-goto WHILE_END0
+push constant 0
+pop local 1
+label WHILE_EXP1
+push local 1
+push local 2
+lt
+not
+if-goto WHILE_END1
+push local 1
+push local 0
+push constant 0
+call Cell.new 3
+pop local 3
+push this 0
+push local 3
+call CellVector.append 2
+pop temp 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push pointer 0
+return
+function Computer.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Computer.chooseXY 3
+push argument 0
+pop pointer 0
+push constant 2
+call Array.new 1
+pop local 1
+push argument 1
+push this 0
+call CellVector.size 1
+call Random.randomInt 2
+pop local 0
+push this 0
+push local 0
+call CellVector.get 2
+pop local 2
+push constant 0
+push local 1
+add
+push local 2
+call Cell.getX 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 1
+push local 1
+add
+push local 2
+call Cell.getY 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 0
+push local 0
+call CellVector.remove 2
+pop temp 0
+push local 1
+return

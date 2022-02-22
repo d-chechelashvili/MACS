@@ -1,0 +1,83 @@
+class Queue{
+   field int logLen;
+   field QueueCell head;
+   field QueueCell tail;
+
+   constructor Queue new(){
+      let head = null;
+      let tail = null;
+      let logLen = 0;
+      return this;
+   }
+
+   method void dispose(){
+      var QueueCell next;
+      while (~(head = null)) {
+         let next = head.getNextCell();
+         do head.dispose();
+         let head = next;
+      }
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method int size(){
+      return logLen;
+   }
+
+   method boolean isEmpty(){
+      if (logLen = 0){
+         return true;
+      }
+      return false;
+   }
+
+   method void enqueue(String value) {
+      var QueueCell cell;
+      let cell = QueueCell.new(value, null);
+	
+	   if (head = null) {
+         let head = cell;
+         let tail = cell;
+	   } else {
+		   do tail.setNextCell(cell);
+		   let tail = cell;
+	   }
+      let logLen = logLen + 1;
+      return;
+   }
+
+   method String front(){
+      var boolean empty;
+      var String errorString;
+      var String firstElem;
+      let empty = isEmpty();
+
+      if(empty){
+         let errorString = "ERROR EMPTY QUEUE";
+         do Output.printString(errorString);
+         do errorString.dispose();
+         return null;
+      }
+
+      let firstElem = head.getValue();
+      return firstElem;
+   }
+
+   method String dequeue() {
+      var String firstElem;
+      var QueueCell nextCell;
+
+      let firstElem = front();
+      let nextCell = head.getNextCell();
+      
+      do head.dispose();
+      let head = nextCell;
+      
+      if (head = null){
+         let tail = null;
+      } 
+      let logLen = logLen - 1;
+      return firstElem;
+   }
+}

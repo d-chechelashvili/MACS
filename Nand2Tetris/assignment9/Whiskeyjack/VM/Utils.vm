@@ -1,0 +1,224 @@
+function Utils.isDigit 2
+push constant 10
+call String.new 1
+push constant 48
+call String.appendChar 2
+push constant 49
+call String.appendChar 2
+push constant 50
+call String.appendChar 2
+push constant 51
+call String.appendChar 2
+push constant 52
+call String.appendChar 2
+push constant 53
+call String.appendChar 2
+push constant 54
+call String.appendChar 2
+push constant 55
+call String.appendChar 2
+push constant 56
+call String.appendChar 2
+push constant 57
+call String.appendChar 2
+pop local 0
+push argument 0
+push local 0
+call Utils.isContained 2
+pop local 1
+push local 0
+call String.dispose 1
+pop temp 0
+push local 1
+return
+function Utils.isNumber 3
+push constant 0
+not
+pop local 0
+push constant 0
+pop local 2
+label WHILE_EXP0
+push local 2
+push argument 0
+call String.length 1
+lt
+not
+if-goto WHILE_END0
+push argument 0
+push local 2
+call String.charAt 2
+pop local 1
+push local 1
+call Utils.isDigit 1
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+pop local 0
+label IF_FALSE0
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Utils.isOperator 2
+push constant 6
+call String.new 1
+push constant 43
+call String.appendChar 2
+push constant 45
+call String.appendChar 2
+push constant 42
+call String.appendChar 2
+push constant 47
+call String.appendChar 2
+push constant 40
+call String.appendChar 2
+push constant 41
+call String.appendChar 2
+pop local 0
+push argument 0
+push local 0
+call Utils.isContained 2
+pop local 1
+push local 0
+call String.dispose 1
+pop temp 0
+push local 1
+return
+function Utils.isContained 2
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+label WHILE_EXP0
+push local 1
+push argument 1
+call String.length 1
+lt
+push local 0
+not
+and
+not
+if-goto WHILE_END0
+push argument 0
+push argument 1
+push local 1
+call String.charAt 2
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop local 0
+label IF_FALSE0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+return
+function Utils.stringEquals 1
+push argument 0
+call String.length 1
+push argument 1
+call String.length 1
+eq
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push argument 0
+call String.length 1
+lt
+not
+if-goto WHILE_END0
+push argument 0
+push local 0
+call String.charAt 2
+push argument 1
+push local 0
+call String.charAt 2
+eq
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+return
+label IF_FALSE1
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+not
+return
+function Utils.concatenate 2
+push argument 0
+call String.length 1
+push argument 1
+call String.length 1
+add
+call String.new 1
+pop local 1
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push argument 0
+call String.length 1
+lt
+not
+if-goto WHILE_END0
+push local 1
+push argument 0
+push local 0
+call String.charAt 2
+call String.appendChar 2
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+pop local 0
+label WHILE_EXP1
+push local 0
+push argument 1
+call String.length 1
+lt
+not
+if-goto WHILE_END1
+push local 1
+push argument 1
+push local 0
+call String.charAt 2
+call String.appendChar 2
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push local 1
+return

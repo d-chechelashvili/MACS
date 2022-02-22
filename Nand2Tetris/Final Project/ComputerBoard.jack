@@ -1,0 +1,466 @@
+class ComputerBoard{
+
+   field int cellNumber; //number of cells in board one dimension
+   field int cellSize; //width/height of single cell in pixels
+   field int boardLeftOffset; //offset from left border of screen in pixels
+   field int boardTopOffset;
+   field Array cells;
+   field ShipVector ships;
+   field int sunkShipCount;
+
+   constructor ComputerBoard new(int AleftOffset, int AtopOffset, int AcellNumber, int AcellSize) {
+      let cellNumber = AcellNumber;
+      let cellSize = AcellSize;
+      let boardLeftOffset = AleftOffset;
+      let boardTopOffset = AtopOffset;
+      let sunkShipCount = 0;
+      do initCells();
+      let ships = ShipVector.new();
+      do Screen.setColor(true);
+      do draw();
+      return this;
+   }
+
+   method void dispose(){
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method void initCells(){
+      var int i, j, xCoord, yCoord;
+      var Array row;
+      var Cell cell;
+      let i = 0;
+
+      let cells = Array.new(cellNumber);
+      while(i < cellNumber){
+         let row = Array.new(cellNumber);
+         let cells[i] = row;
+         let j = 0;
+         while(j < cellNumber){
+            let xCoord = boardLeftOffset + (j * cellSize);
+            let yCoord = boardTopOffset + (i * cellSize);
+            let row[j] = Cell.new(xCoord, yCoord, cellSize);
+            let cell = row[j];
+            do cell.drawState(Cell.clearState());
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+      return;
+   }
+
+   method int getCellSize(){
+      return cellSize;
+   }
+
+   method int getCellNumber(){
+      return cellNumber;
+   }
+
+   method int getLeftOffset(){
+      return boardLeftOffset;
+   }
+
+   method void draw(){
+       var int i, boardLen, leftOffset, topOffset;
+       let boardLen = cellNumber * cellSize;
+       let i = 0;
+       while(i < (cellNumber + 1)){
+          let topOffset = boardTopOffset + (i * cellSize) - 1;
+          do Screen.drawLine(boardLeftOffset - 1, topOffset, (boardLeftOffset - 1 + boardLen), topOffset);
+          let i = i + 1;
+       }
+
+       let i = 0;
+       while(i < (cellNumber + 1)){
+          let leftOffset = boardLeftOffset + (i * cellSize) - 1;
+          do Screen.drawLine(leftOffset, boardTopOffset - 1, leftOffset, (boardTopOffset - 1 + boardLen));
+          let i = i + 1;
+       }
+       return;
+   }
+
+   method void restoreCellState(int x, int y){
+      var Cell cell;
+      var Array row;
+      var int state;
+      let row = cells[y];
+      let cell = row[x];
+      let state = cell.getState();
+      if(~(state = Cell.shipState())){
+         do cell.drawState(state);
+      }
+      return;
+   }
+
+
+   method void generateShips(Random random){
+      var int i, j;
+      var Cell tempCell;
+      var CellVector eligibleCells;
+
+      let eligibleCells = CellVector.new();
+      let i = 0;
+      while(i < cellNumber){
+         let j = 0;
+         while(j < cellNumber){
+            let tempCell = Cell.new(j, i, 0);
+            do eligibleCells.append(tempCell);
+            let j = j + 1;
+         }
+         let i = i + 1;
+      }
+
+      do putShips(random, eligibleCells);
+      //do ships.print();
+      return;
+   }
+
+   method void putShips(Random random, CellVector eligibleCells){
+      var int i, j;
+      var Array counts;
+      let counts = Array.new(6);
+      let counts[1] = 2;
+      let counts[2] = 2;
+      let counts[3] = 1;
+      let counts[4] = 1;
+      let counts[5] = 1;
+      let i = 5;
+      while(i > 0){
+         let j = counts[i];
+         while(j > 0){
+            do putShip(random, eligibleCells, i);
+            let j = j - 1;
+         }
+         let i = i - 1;
+      }
+      return;
+   }
+
+   //probably the worst method I have ever written xd
+   method void putShip(Random random, CellVector eligibleCells, int length){
+      var int randomPos, tempLen, x, y, tempX, tempY, direction;
+      var Cell cell, nextCell;
+      var CellVector shipCells;
+      var Ship ship;
+      
+      let shipCells = CellVector.new();
+      let randomPos = random.randomInt(eligibleCells.size());
+      let direction = (random.randomInt(100) / 50) + 1;
+
+      while(true){
+         let cell = eligibleCells.get(randomPos);
+         let x = cell.getX();
+         let y = cell.getY();
+         do shipCells.append(cell);
+         let tempLen = length - 1;
+
+         if(tempLen = 0){
+            let ship = Ship.new(x, y);
+            do ships.append(ship);
+            do markShip(shipCells);
+            do makeCellsIneligible(eligibleCells, shipCells);
+            return;
+         }
+
+         if (direction = Ship.vertical()){
+
+            let tempX = x + 1;
+            let nextCell = eligibleCells.find(tempX, y);
+            while (~(nextCell = null)){
+               do shipCells.append(nextCell);
+               let tempLen = tempLen - 1;
+               if(tempLen = 0){
+                  let ship = Ship.new(x, y);
+                  do ship.setLength(shipCells.size());
+                  do ship.setDirection(Ship.horizontal());
+                  do ships.append(ship);
+                  do markShip(shipCells);
+                  do makeCellsIneligible(eligibleCells, shipCells);
+                  return;
+               }
+               let tempX = tempX + 1;
+               let nextCell = eligibleCells.find(tempX, y);
+            }
+
+            // aq tu movida eseigi 0 an meti sigrdze aqvs marjvena mxares da axla marcxniv unda damtavrdes 
+            let tempX = x - 1;
+            let nextCell = eligibleCells.find(tempX, y);
+            while (~(nextCell = null)){
+               do shipCells.append(nextCell);
+               let tempLen = tempLen - 1;
+               if(tempLen = 0){
+                  let ship = Ship.new(tempX, y);
+                  do ship.setLength(shipCells.size());
+                  do ship.setDirection(Ship.horizontal());
+                  do ships.append(ship);
+                  do markShip(shipCells);
+                  do makeCellsIneligible(eligibleCells, shipCells);
+                  return;
+               }
+               let tempX = tempX - 1;
+               let nextCell = eligibleCells.find(tempX, y);
+            }
+
+            // aq tu movida horizontalurad ver gamodis eseigi da verticalurad unda vcadot
+            do shipCells.clear();
+            do shipCells.append(cell);
+            let tempLen = length - 1;
+
+            let tempY = y + 1;
+            let nextCell = eligibleCells.find(x, tempY);
+            while (~(nextCell = null)){
+               do shipCells.append(nextCell);
+               let tempLen = tempLen - 1;
+               if(tempLen = 0){
+                  let ship = Ship.new(x, y);
+                  do ship.setLength(shipCells.size());
+                  do ship.setDirection(Ship.vertical());
+                  do ships.append(ship);
+                  do markShip(shipCells);
+                  do makeCellsIneligible(eligibleCells, shipCells);
+                  return;
+               }
+               let tempY = tempY + 1;
+               let nextCell = eligibleCells.find(x, tempY);
+            }
+
+            // aq tu movida eseigi 0 an meti sigrdze aqvs qvemot da axla zemot unda damtavrdes 
+            let tempY = y - 1;
+            let nextCell = eligibleCells.find(x, tempY);
+            while (~(nextCell = null)){
+               do shipCells.append(nextCell);
+               let tempLen = tempLen - 1;
+               if(tempLen = 0){
+                  let ship = Ship.new(x, tempY);
+                  do ship.setLength(shipCells.size());
+                  do ship.setDirection(Ship.vertical());
+                  do ships.append(ship);
+                  do markShip(shipCells);
+                  do makeCellsIneligible(eligibleCells, shipCells);
+                  return;
+               }
+               let tempY = tempY - 1;
+               let nextCell = eligibleCells.find(x, tempY);
+            }
+         }else{
+            // VERTICAL
+            let tempY = y + 1;
+            let nextCell = eligibleCells.find(x, tempY);
+            while (~(nextCell = null)){
+               do shipCells.append(nextCell);
+               let tempLen = tempLen - 1;
+               if(tempLen = 0){
+                  let ship = Ship.new(x, y);
+                  do ship.setLength(shipCells.size());
+                  do ship.setDirection(Ship.vertical());
+                  do ships.append(ship);
+                  do markShip(shipCells);
+                  do makeCellsIneligible(eligibleCells, shipCells);
+                  return;
+               }
+               let tempY = tempY + 1;
+               let nextCell = eligibleCells.find(x, tempY);
+            }
+
+            // aq tu movida eseigi 0 an meti sigrdze aqvs qvemot da axla zemot unda damtavrdes 
+            let tempY = y - 1;
+            let nextCell = eligibleCells.find(x, tempY);
+            while (~(nextCell = null)){
+               do shipCells.append(nextCell);
+               let tempLen = tempLen - 1;
+               if(tempLen = 0){
+                  let ship = Ship.new(x, tempY);
+                  do ship.setLength(shipCells.size());
+                  do ship.setDirection(Ship.vertical());
+                  do ships.append(ship);
+                  do markShip(shipCells);
+                  do makeCellsIneligible(eligibleCells, shipCells);
+                  return;
+               }
+               let tempY = tempY - 1;
+               let nextCell = eligibleCells.find(x, tempY);
+            }
+
+            do shipCells.clear();
+            do shipCells.append(cell);
+            let tempLen = length - 1;
+
+            let tempX = x + 1;
+            let nextCell = eligibleCells.find(tempX, y);
+            while (~(nextCell = null)){
+               do shipCells.append(nextCell);
+               let tempLen = tempLen - 1;
+               if(tempLen = 0){
+                  let ship = Ship.new(x, y);
+                  do ship.setLength(shipCells.size());
+                  do ship.setDirection(Ship.horizontal());
+                  do ships.append(ship);
+                  do markShip(shipCells);
+                  do makeCellsIneligible(eligibleCells, shipCells);
+                  return;
+               }
+               let tempX = tempX + 1;
+               let nextCell = eligibleCells.find(tempX, y);
+            }
+
+            // aq tu movida eseigi 0 an meti sigrdze aqvs marjvena mxares da axla marcxniv unda damtavrdes 
+            let tempX = x - 1;
+            let nextCell = eligibleCells.find(tempX, y);
+            while (~(nextCell = null)){
+               do shipCells.append(nextCell);
+               let tempLen = tempLen - 1;
+               if(tempLen = 0){
+                  let ship = Ship.new(tempX, y);
+                  do ship.setLength(shipCells.size());
+                  do ship.setDirection(Ship.horizontal());
+                  do ships.append(ship);
+                  do markShip(shipCells);
+                  do makeCellsIneligible(eligibleCells, shipCells);
+                  return;
+               }
+               let tempX = tempX - 1;
+               let nextCell = eligibleCells.find(tempX, y);
+            }
+         }
+         
+         //tu aq movida eg ujra ar gvawyobs eseigi am gemistvis, verc horizontalurad dasva da verc vertikalurad
+         do shipCells.clear();
+         let randomPos = Utils.mod((randomPos + 1), eligibleCells.size());
+      }
+      
+      return;
+   }
+
+   method void makeCellsIneligible(CellVector eligibleCells, CellVector shipCells){
+      var int i, a, b, x, y, cellIndex;
+      var Cell cell;
+
+      let i = 0;
+      while(i < shipCells.size()){
+         let cell = shipCells.get(i);
+         let a = -1;
+         while(a < 2){
+            let b = -1;
+            while(b < 2){
+               let x = cell.getX() + b;
+               let y = cell.getY() + a;
+               let cellIndex = eligibleCells.indexOf(x, y);
+               if (~(cellIndex = -1)){
+                  do eligibleCells.remove(cellIndex);
+               }
+               let b = b + 1;
+            }
+            let a = a + 1;
+         }
+         let i = i + 1;
+      }
+      return;
+   }
+
+   method void markShip(CellVector shipCells){
+      var int i;
+      var Cell shipCell, cell;
+      var Array row;
+      let i = 0;
+      while(i < shipCells.size()){
+         let shipCell = shipCells.get(i);
+         let row = cells[shipCell.getY()]; 
+         let cell = row[shipCell.getX()];
+         do cell.setState(Cell.shipState()); // drawState
+         let i = i + 1;
+      }
+      return;
+   }
+
+   // returns if the game is over
+   method boolean shoot(int x, int y){
+      var Array row;
+      var Cell cell;
+      let row = cells[y];
+      let cell = row[x];
+      if (cell.getState() = Cell.clearState()){
+         do cell.drawState(Cell.missedState());
+      }
+      if (cell.getState() = Cell.shipState()){
+         do cell.drawState(Cell.hitState());
+         do markSunkShips();
+         if (sunkShipCount = 7){
+            return true;
+         }
+      }
+      //do Output.printString("Bang");
+      return false;
+   }
+
+   method void markSunkShips(){
+      var int i, j, x, y, length, temp;
+      var Ship ship;
+      var Array row;
+      var Cell cell;
+      var boolean isSunk;
+      let i = 0;
+      while(i < ships.size()){
+         let ship = ships.get(i);
+         let x = ship.getStartX();
+         let y = ship.getStartY();
+         let length = ship.getLength();
+         let isSunk = true;
+         if (ship.getDirection() = Ship.vertical()){
+            let j = 0;
+            while(j < length){
+               let temp = y + j;
+               let row = cells[temp];
+               let cell = row[x];
+               if (~(cell.getState() = Cell.hitState())){
+                  let isSunk = false;
+               }
+               let j = j + 1;
+            }
+            if (isSunk){
+               let j = 0;
+               while((j < length) & (isSunk)){
+                  let temp = y + j;
+                  let row = cells[temp];
+                  let cell = row[x];
+                  do cell.drawState(Cell.sunkState());
+                  let j = j + 1;
+               } 
+               let sunkShipCount = sunkShipCount + 1; 
+            }
+         }else{
+            let j = 0;
+            while((j < length) & (isSunk)){
+               let row = cells[y];
+               let temp = x + j;
+               let cell = row[temp];
+               if (~(cell.getState() = Cell.hitState())){
+                  let isSunk = false;
+               }
+               let j = j + 1;
+            }
+            if (isSunk){
+               let j = 0;
+               while(j < length){
+                  let row = cells[y];
+                  let cell = row[(x + j)];
+                  do cell.drawState(Cell.sunkState());
+                  let j = j + 1;
+               }  
+               let sunkShipCount = sunkShipCount + 1;
+            }
+         }
+         let i = i + 1;
+      }
+      return;
+   }
+
+   method void reset(){
+      do cells.dispose();
+      do initCells();
+      do ships.dispose();
+      let ships = ShipVector.new();
+      return;
+   }
+}

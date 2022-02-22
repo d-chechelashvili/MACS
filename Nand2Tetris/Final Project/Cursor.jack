@@ -1,0 +1,107 @@
+class Cursor {
+
+   field int x, y;
+   field int frameWidth;
+   field int sideOffset;
+   field int topOffset;
+   field int cellSize;
+
+   constructor Cursor new(int AcellSize, int AsideOffset, int AupDownOffset) {
+      let cellSize = AcellSize;
+      let frameWidth = 4;
+      let sideOffset = AsideOffset;
+      let topOffset = AupDownOffset;
+      let x = 0;
+      let y = 0;
+      do draw();
+      return this;
+   }
+
+   /** Deallocates the object's memory. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   method int getX(){
+      return x;
+   }
+
+   method int getY(){
+      return y;
+   }
+
+   method int xCoordinate(){
+      return sideOffset + (x * cellSize);
+   }
+
+   method int yCoordinate(){
+      return topOffset + (y * cellSize);
+   }
+
+   method void changeBoard(int newSideOffset){
+      do removeCursor();
+      let sideOffset = newSideOffset;
+      let x = 0;
+      let y = 0;
+      do draw();
+      return;
+   }
+
+   /** Draws the cursor. */
+   method void draw() {
+      var int xCoord, yCoord;
+      let xCoord = xCoordinate();
+      let yCoord = yCoordinate();
+      do Screen.setColor(true);
+      do Screen.drawRectangle(xCoord, yCoord, xCoord + cellSize - 2, yCoord + cellSize - 2);
+      do Screen.setColor(false);
+      do Screen.drawRectangle(xCoord + frameWidth - 1, yCoord + frameWidth - 1, xCoord + cellSize - frameWidth - 1, yCoord + cellSize - frameWidth - 1);
+      return;
+   }
+
+   method void removeCursor(){
+      var int xCoord, yCoord;
+      let xCoord = xCoordinate();
+      let yCoord = yCoordinate();
+      do Screen.setColor(false);
+      do Screen.drawRectangle(xCoord, yCoord, xCoord + cellSize - 2, yCoord + cellSize - 2);
+      return;
+   }
+
+   /** Moves the cursor one step according to the given direction. */
+   method boolean move(int key) {
+      var boolean cursorMoved;
+      let cursorMoved = false;
+      if ((key = 130) & (x > 0)){
+         do removeCursor();
+         let x = x - 1;
+         do draw();
+         let cursorMoved = true;
+      }
+
+      if ((key = 131) & (y > 0)){
+         do removeCursor();
+         let y = y - 1;
+         do draw();
+         let cursorMoved = true;
+      }
+
+      if ((key = 132) & (x < 9)){
+         do removeCursor();
+         let x = x + 1;
+         do draw();
+         let cursorMoved = true;
+      }
+
+      if ((key = 133) & (y < 9)){
+         do removeCursor();
+         let y = y + 1;
+         do draw();
+         let cursorMoved = true;
+      }
+
+
+      return cursorMoved;
+   }
+}

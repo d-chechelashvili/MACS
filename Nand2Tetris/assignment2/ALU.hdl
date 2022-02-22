@@ -1,0 +1,26 @@
+CHIP ALU {
+    IN x[16], y[16], zx, nx, zy, ny, f, no;
+    OUT out[16], zr, ng;
+
+    PARTS:
+    //zx and nx do manipulations on x so we can combine them and get the end result directly with mux4way16
+    Not16(in=x, out=notX);
+    Mux4Way16(a=x, b=false, c=notX, d=true, sel[0]=zx, sel[1]=nx, out=newX);
+
+    //zy and ny do manipulations on y so we can combine them and get the end result directly with mux4way16
+    Not16(in=y, out=notY);
+    Mux4Way16(a=y, b=false, c=notY, d=true, sel[0]=zy, sel[1]=ny, out=newY);
+    
+    //we compute both: sum and and, then we choose which one to return according to value of f
+    Add16(a=newX, b=newY, out=sumXY);
+    And16(a=newX, b=newY, out=andXY);
+    Mux16(a=andXY, b=sumXY, sel=f, out=fXY);
+
+    //we compute not fXY and if 'no' is true we return that, else we return fXY 
+    Not16(in=fXY, out=nfXY);
+    Mux16 (a=fXY, b=nfXY, sel=no, out=out, out[0..15]=value, out[15]=signBit, out[15]=ng);//out[15] is ng
+
+    //we add -1 to the value, if sign bit changes => value was 0
+    Add16 (a=value, b=true, out[15]=newSignBit);
+    Xor   (a=signBit, b=newSignBit, out=zr);
+}

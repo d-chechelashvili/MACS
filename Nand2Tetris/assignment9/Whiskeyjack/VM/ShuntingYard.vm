@@ -1,0 +1,471 @@
+function ShuntingYard.evaluate 4
+push argument 0
+call TokenScanner.new 1
+pop local 0
+call Stack.new 0
+pop local 1
+call Stack.new 0
+pop local 2
+push local 0
+push local 1
+push local 2
+call ShuntingYard.runShuntingYard 3
+pop local 3
+push local 0
+call TokenScanner.dispose 1
+pop temp 0
+push local 1
+call Stack.dispose 1
+pop temp 0
+push local 2
+call Stack.dispose 1
+pop temp 0
+push local 3
+return
+function ShuntingYard.runShuntingYard 2
+push argument 0
+push argument 1
+push argument 2
+call ShuntingYard.parseExpression 3
+pop local 0
+push local 0
+push constant 404
+neg
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 19
+call String.new 1
+push constant 73
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 118
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 108
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 100
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 120
+call String.appendChar 2
+push constant 112
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+return
+label IF_FALSE0
+label WHILE_EXP0
+push argument 2
+call Stack.isEmpty 1
+not
+not
+if-goto WHILE_END0
+push argument 1
+push argument 2
+call ShuntingYard.evalTop 2
+pop local 0
+push local 0
+push constant 404
+neg
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 19
+call String.new 1
+push constant 73
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 118
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 108
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 100
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 120
+call String.appendChar 2
+push constant 112
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+return
+label IF_FALSE1
+goto WHILE_EXP0
+label WHILE_END0
+push constant 30
+call String.new 1
+pop local 1
+push local 1
+push argument 1
+call Stack.pop 1
+call String.setInt 2
+pop temp 0
+push argument 1
+call Stack.isEmpty 1
+not
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 19
+call String.new 1
+push constant 73
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 118
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 108
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 100
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 120
+call String.appendChar 2
+push constant 112
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 115
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+return
+label IF_FALSE2
+push local 1
+return
+function ShuntingYard.parseExpression 2
+push constant 0
+not
+pop local 1
+label WHILE_EXP0
+push argument 0
+call TokenScanner.hasNext 1
+not
+if-goto WHILE_END0
+push argument 0
+call TokenScanner.nextToken 1
+pop local 0
+push local 0
+push constant 0
+call String.charAt 2
+push constant 69
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+call String.dispose 1
+pop temp 0
+push constant 404
+neg
+return
+label IF_FALSE0
+push argument 1
+push argument 2
+push local 0
+call ShuntingYard.parseToken 3
+pop local 1
+push local 1
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 404
+neg
+return
+label IF_FALSE1
+push local 0
+call String.dispose 1
+pop temp 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 1
+return
+function ShuntingYard.parseToken 3
+push argument 2
+call Utils.isNumber 1
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 0
+push argument 2
+call String.intValue 1
+call Stack.push 2
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push argument 2
+push constant 0
+call String.charAt 2
+pop local 0
+push local 0
+push constant 40
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push argument 1
+push local 0
+call Stack.push 2
+pop temp 0
+goto IF_END1
+label IF_FALSE1
+push local 0
+push constant 41
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+label WHILE_EXP0
+push argument 1
+call Stack.isEmpty 1
+not
+push argument 1
+call Stack.peek 1
+push constant 40
+eq
+not
+and
+not
+if-goto WHILE_END0
+push argument 0
+push argument 1
+call ShuntingYard.evalTop 2
+pop local 2
+push local 2
+push constant 404
+neg
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+return
+label IF_FALSE3
+goto WHILE_EXP0
+label WHILE_END0
+push argument 1
+call Stack.pop 1
+pop local 1
+push local 1
+push constant 40
+eq
+not
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+return
+label IF_FALSE4
+goto IF_END2
+label IF_FALSE2
+label WHILE_EXP1
+push argument 1
+call Stack.isEmpty 1
+not
+push argument 1
+call Stack.peek 1
+call ShuntingYard.precedenceOf 1
+push local 0
+call ShuntingYard.precedenceOf 1
+lt
+not
+and
+not
+if-goto WHILE_END1
+push argument 0
+push argument 1
+call ShuntingYard.evalTop 2
+pop local 2
+push local 2
+push constant 404
+neg
+eq
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push constant 0
+return
+label IF_FALSE5
+goto WHILE_EXP1
+label WHILE_END1
+push argument 1
+push local 0
+call Stack.push 2
+pop temp 0
+label IF_END2
+label IF_END1
+label IF_END0
+push constant 0
+not
+return
+function ShuntingYard.evalTop 3
+push argument 0
+call Stack.pop 1
+pop local 1
+push argument 0
+call Stack.pop 1
+pop local 0
+push argument 1
+call Stack.pop 1
+pop local 2
+push local 2
+push constant 404
+neg
+eq
+push local 0
+push constant 404
+neg
+eq
+or
+push local 1
+push constant 404
+neg
+eq
+or
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 404
+neg
+return
+label IF_FALSE0
+push argument 0
+push local 0
+push local 1
+push local 2
+call ShuntingYard.evalOperator 3
+call Stack.push 2
+pop temp 0
+push constant 1
+return
+function ShuntingYard.evalOperator 0
+push argument 2
+push constant 43
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 0
+push argument 1
+add
+return
+label IF_FALSE0
+push argument 2
+push constant 45
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push argument 0
+push argument 1
+sub
+return
+label IF_FALSE1
+push argument 2
+push constant 42
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push argument 0
+push argument 1
+call Math.multiply 2
+return
+label IF_FALSE2
+push argument 0
+push argument 1
+call Math.divide 2
+return
+function ShuntingYard.precedenceOf 0
+push argument 0
+push constant 43
+eq
+push argument 0
+push constant 45
+eq
+or
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 1
+return
+label IF_FALSE0
+push argument 0
+push constant 42
+eq
+push argument 0
+push constant 47
+eq
+or
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 2
+return
+label IF_FALSE1
+push constant 0
+return
