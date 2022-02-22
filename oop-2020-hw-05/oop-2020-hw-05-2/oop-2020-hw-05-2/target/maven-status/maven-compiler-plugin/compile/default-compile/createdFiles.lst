@@ -1,0 +1,7 @@
+Model\Product.class
+Controller\ShoppingHandler.class
+Model\WebAppInitializer.class
+Model\ShoppingCart.class
+Model\StudentStoreDatabase.class
+Controller\ProductHandler.class
+Controller\Home.class
