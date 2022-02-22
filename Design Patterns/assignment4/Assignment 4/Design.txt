@@ -1,0 +1,16 @@
+Item(Single/Pack):
+    name         - String
+    count        - Integer
+    single_price - Float
+
+Receipt:
+    items - List[Item]
+
+
+Actors: Cashier, Manager, Customer
+
+POST /receipt/open_receipt              (Cashier)
+POST /receipt/add_item?item_name="Milk" (Cashier)
+POST /receipt/close_receipt             (Cashier)
+GET  /receipt                           (Customer)
+GET  /report/x_report                   (Manager)
