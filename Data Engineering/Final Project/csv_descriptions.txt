@@ -1,0 +1,40 @@
+credits.csv:
+    cast: list(map(cast_id, character, credit_id, gender, "human"_id, name, order, profile_path))
+    crew: list(map(credit_id, department, gender, "human"_id, job, name, profile_path))
+    "movie"_id:   int
+
+keywords.csv:
+    "movie"_id: int
+    keywords:   list(map("keyword"_id, "keyword"_name))
+
+movies_metadata.csv:
+    adult:                boolean
+    belongs:              json
+    budget:               int
+    genres:               list(map(id, name))
+    homepage:             string
+    id:                   int
+    imdb_id:              int
+    original_language:    string
+    original_title:       string
+    overview:             text
+    popularity:           float
+    poster_path:          string
+    production_companies: list(map(id, name))
+    production_countries: list(map(iso_3166_1, name))
+    release_date:         date
+    revenue:              int
+    runtime:              int
+    spoken_languages:     list(map(iso_639_1, name))
+    status:               string
+    tagline:              text
+    title:                string
+    video:                boolean
+    vote_average:         float
+    vote_count:           int
+
+ratings.csv:
+    userId:    int
+    movieId:  int
+    rating:    float
+    timestamp: timestamp

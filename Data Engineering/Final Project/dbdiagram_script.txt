@@ -1,0 +1,91 @@
+Table Movie as M{
+  movie_id int
+  imdb_id int
+  title string
+  status boolean
+}
+
+Ref: M.movie_id > MG.movie_id
+Ref: M.movie_id > MC.movie_id
+Ref: M.movie_id > MCMP.movie_id
+Ref: M.movie_id > ML.movie_id
+Ref: M.movie_id > C.movie_id
+Ref: M.movie_id > K.movie_id
+Ref: M.movie_id > R.movie_id
+Ref: M.movie_id > AI.movie_id
+Ref: M.movie_id > S.movie_id
+Ref: M.movie_id > P.movie_id
+
+
+
+Table Stats as S{
+  movie_id int
+  popularity float
+  release_date date
+  revenue int
+  runtime int
+  vote_average float
+  vote_count int
+}
+
+
+Table Additional_Info as AI{
+  movie_id int
+  homepage string 
+  original_title string
+  overview text
+}
+
+
+Table Movie_Genres as MG{
+  movie_id int
+  genre_name string
+}
+
+// Ref: G.genre_id > GMR.genre_id
+
+// Table Genre_Movie_Relation as GMR{
+//   imdb_id int
+//   genre_id int
+// }
+
+Table Movie_Countries as MC{
+  movie_id int
+  production_country_name string
+}
+
+Table Movie_Companies as MCMP{
+  movie_id int
+  production_company_name string
+}
+
+Table Movie_Language as ML{
+  movie_id int
+  spoken_language_name string
+}
+
+Table Cast as C{
+  movie_id int
+  actor_id int
+}
+
+Table Actors as A{
+  actor_id int
+  actor_name string
+}
+Ref: A.actor_id > C.actor_id
+
+Table Keywords as K{
+  movie_id int
+  keyword string
+}
+
+Table Ratings as R{
+  movie_id int
+  rating float
+}
+
+Table Posters as P{
+  movie_id int 
+  poster_local_path string
+}
