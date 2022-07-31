@@ -1,0 +1,51 @@
+
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> args <- commandArgs(TRUE);
+> input.file <- as.character(args[1]);
+> plot.file <- as.character(args[2]);
+> 
+> data.table <- read.delim(file = input.file, header = FALSE, stringsAsFactors = FALSE);
+> data.table <- cbind(data.table, grepl("Clust", data.table[,3]));
+> data.table[,3] <- as.numeric(sub("Clust", "", data.table[,3])) + 1;
+> data.table <- cbind(data.table, (data.table[,4] + 0.4) * 3);
+> data.table[,4] <- data.table[,4] * -18 + 19;
+> 
+> png(filename = plot.file, height = 1000, width = 1000);
+> par(mai = c(1,1,0.3,0.3));
+> plot(
++ 	data.table[,1], data.table[,2],
++ 	xlab = "BRCA1 Gene Expression",
++ 	ylab = "SOX2 Gene Expression",
++ 	col = data.table[,3],
++ 	pch = data.table[,4],
++ 	cex = data.table[,5],
++ 	cex.axis = 1.3,
++ 	cex.lab = 2.5
++ 	);
+> dev.off();
+null device 
+          1 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  0.502   0.032   0.589 

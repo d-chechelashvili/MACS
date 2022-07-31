@@ -1,0 +1,18 @@
+ცოტა რთული გამოსაყენებელი ბიბლიოთეკაა გასამართად. ვინდოუს გარემოზე ვერ გავმართე, ლინუქსი(wsl) გამოვიყენე.
+
+კოდი დავწერე python 3.9 გარემოში.(წესით 3.5+ იმუშავებს)
+რომ ემუშავა ბიბლიოთეკას გავუშვი შემდეგი ბრძანებები.
+pip install numpy
+pip install pandas
+pip install weblogo
+pip install jupyter(ეს მგონი არაა საჭირო)
+pip install seqlogo
+sudo apt install ghostscript
+sudo apt install pdf2svg
+
+ასევე გადავაკეთე PWM მატრიცების ფაილებში ჩაწერის ფორმატი. სვეტებად წერია შემდეგი ფორმატით:
+
+Pr(A,1)     Pr(C,1)     Pr(G,1)     Pr(T,1)
+Pr(A,2)     Pr(C,2)     Pr(G,3)     Pr(T,4)
+        ...
+Pr(A,L)     Pr(C,L)     Pr(G,L)     Pr(T,L)
